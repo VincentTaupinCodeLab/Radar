@@ -4,7 +4,7 @@
     "nom": "Test interne",
     "secteurs": ["restauration", "btp"],
     "departements": ["16", "17", "33"],
-    "envoyer_si_vide": true,
+    "envoyer_si_vide": false,
     "actif": true
   }
 ]
