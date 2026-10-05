@@ -15,6 +15,7 @@ import json
 import os
 import sqlite3
 import sys
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -54,8 +55,17 @@ def send(to: str, subject: str, body: str):
                  "content-type": "application/json",
                  "accept": "application/json"},
         method="POST")
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return r.status
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return r.status
+    except urllib.error.HTTPError as e:
+        detail = e.read().decode(errors="replace")[:500]
+        key = os.environ.get("BREVO_API_KEY", "")
+        print(f"Brevo HTTP {e.code} : {detail}", file=sys.stderr)
+        print(f"Clé reçue : préfixe '{key[:8]}', longueur {len(key)} "
+              "(une clé API commence par 'xkeysib-', une clé SMTP par 'xsmtpsib-')",
+              file=sys.stderr)
+        raise
 
 
 def main():
