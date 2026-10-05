@@ -70,6 +70,8 @@ def fetch(where: str) -> list:
 
 
 def in_zone(rec: dict, region: str, depts: list) -> bool:
+    if region == "all":
+        return True
     code = str(rec.get("lieuexecution_code") or "")
     typ = (rec.get("lieuexecution_typecode") or "").lower()
     if "région" in typ or "region" in typ:
@@ -86,7 +88,7 @@ def main():
     ap.add_argument("--region", default="75")
     a = ap.parse_args()
     since = a.since or (dt.date.today() - dt.timedelta(days=a.days)).isoformat()
-    depts = REGIONS[a.region]
+    depts = REGIONS.get(a.region, [])
 
     raw = fetch(f'datenotification>="{since}"')
     seen, rows = set(), []
@@ -146,7 +148,7 @@ def render(fams: dict, since: str) -> str:
 h2{{font-size:16px;margin:22px 0 6px}} .m{{color:#777;font-weight:400}}
 table{{border-collapse:collapse;width:100%}} td{{border-top:1px solid #e6e6e6;padding:6px;vertical-align:top}}
 .r{{text-align:right;white-space:nowrap}}</style>
-<h1>Marchés publics attribués en Nouvelle-Aquitaine depuis le {since}</h1>
+<h1>Marchés publics attribués depuis le {since}</h1>
 <p class=m>Source : DECP, data.economie.gouv.fr (Licence Ouverte 2.0)</p>
 {''.join(parts)}"""
 

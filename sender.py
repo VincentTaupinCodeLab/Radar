@@ -22,19 +22,22 @@ from pathlib import Path
 from pipeline import DB, OUT, email_html
 
 ROOT = Path(__file__).parent
-STATE = ROOT / "state" / "last_sent.txt"
+STATE = ROOT / "state" / "last_parution.txt"
 SUBS = ROOT / "subscribers.json"
 
 
 def last_sent() -> str:
+    """Date de parution BODACC la plus récente déjà envoyée. On s'appuie sur
+    la date de parution (et non sur la date d'insertion) pour qu'une perte de
+    la base en cache ne provoque jamais de renvoi en double."""
     if STATE.exists():
         return STATE.read_text().strip()
-    return (dt.datetime.now(dt.UTC) - dt.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S")
+    return (dt.date.today() - dt.timedelta(days=2)).isoformat()
 
 
 def select(con, since: str, sector: str, depts: list) -> list:
     con.row_factory = sqlite3.Row
-    q = ("SELECT * FROM annonces WHERE inserted_at >= ? AND secteur = ? "
+    q = ("SELECT * FROM annonces WHERE date_parution > ? AND secteur = ? "
          f"AND departement IN ({','.join('?' * len(depts))}) "
          "ORDER BY departement, ville")
     return [dict(r) for r in con.execute(q, [since, sector, *depts])]
@@ -68,10 +71,17 @@ def send(to: str, subject: str, body: str):
         raise
 
 
+def con_latest() -> str | None:
+    con = sqlite3.connect(DB)
+    (v,) = con.execute("SELECT max(date_parution) FROM annonces").fetchone()
+    con.close()
+    return v
+
+
 def main():
     dry = os.environ.get("DRY_RUN") == "1" or not os.environ.get("BREVO_API_KEY")
     since = last_sent()
-    now = dt.datetime.now(dt.UTC).strftime("%Y-%m-%d %H:%M:%S")
+    latest = con_latest()
     subs = json.loads(SUBS.read_text())
     con = sqlite3.connect(DB)
     label = dt.date.today().isoformat()
@@ -96,9 +106,9 @@ def main():
                 print(f"envoyé {s['email']} · {subject} · HTTP {status}")
             sent += 1
 
-    if not dry:
+    if not dry and latest and latest > since:
         STATE.parent.mkdir(exist_ok=True)
-        STATE.write_text(now)
+        STATE.write_text(latest)
     print(f"{sent} email(s) {'simulé(s)' if dry else 'envoyé(s)'} depuis {since}")
 
 

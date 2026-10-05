@@ -202,8 +202,12 @@ def store(rows: list) -> int:
         f"INSERT OR IGNORE INTO annonces ({','.join(cols)}) "
         f"VALUES ({','.join('?' * len(cols))})",
         [tuple(r[c] for c in cols) for r in rows])
-    con.commit()
     new = con.total_changes - before
+    # Base mise en cache entre deux passages : 10 jours suffisent
+    # (chaque passage ne relit que les 3 derniers jours).
+    con.execute("DELETE FROM annonces WHERE date_parution < date('now', '-10 days')")
+    con.commit()
+    con.execute("VACUUM")
     con.close()
     return new
 
