@@ -37,7 +37,7 @@ DEPTS = {  # libellés pour l'objet du mail
     "56": "dans le Morbihan", "68": "dans le Haut-Rhin", "42": "dans la Loire", "26": "dans la Drôme",
     "92": "dans les Hauts-de-Seine", "94": "dans le Val-de-Marne", "91": "dans l'Essonne", "25": "dans le Doubs",
     "58": "dans la Nièvre", "28": "en Eure-et-Loir", "86": "dans la Vienne", "24": "en Dordogne",
-    "40": "dans les Landes", "87": "en Haute-Vienne", "79": "dans les Deux-Sèvres", "47": "en Lot-et-Garonne",
+    "40": "dans les Landes", "87": "en Haute-Vienne", "79": "dans les Deux-Sèvres", "49": "en Maine-et-Loire", "47": "en Lot-et-Garonne",
 }
 SECTEURS = ("restauration", "commerce_alimentaire")
 
