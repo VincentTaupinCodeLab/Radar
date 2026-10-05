@@ -5,7 +5,12 @@ on:
     # 05:12 UTC = 07:12 à Paris l'été, 06:12 l'hiver. Du mardi au samedi
     # (le BODACC paraît en semaine ; le run du mardi rattrape le lundi).
     - cron: "12 5 * * 2-6"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      test_to:
+        description: "Envoyer seulement un email de test à cette adresse (laisser vide pour un passage normal)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -36,6 +41,7 @@ jobs:
         run: python pipeline.py --days 3
 
       - name: DECP (marchés attribués, 30 derniers jours, toute la France)
+        if: ${{ !inputs.test_to }}
         run: python decp.py --days 30 --region all
 
       - name: Envoi des alertes
@@ -43,6 +49,7 @@ jobs:
           BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
           SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
           SENDER_NAME: Radar Entreprises
+          TEST_TO: ${{ inputs.test_to }}
         run: python sender.py
 
       - name: Sauvegarde de la base (cache)

@@ -78,7 +78,23 @@ def con_latest() -> str | None:
     return v
 
 
+def test_send(to: str):
+    """Envoi de contrôle : la dernière journée disponible, secteur restauration,
+    sans toucher à l'état de dédoublonnage."""
+    con = sqlite3.connect(DB)
+    con.row_factory = sqlite3.Row
+    (day,) = con.execute("SELECT max(date_parution) FROM annonces").fetchone()
+    rows = [dict(r) for r in con.execute(
+        "SELECT * FROM annonces WHERE secteur='restauration' AND date_parution=? "
+        "ORDER BY departement, ville LIMIT 40", (day,))]
+    body = email_html("restauration", rows, day)
+    status = send(to, f"[Test] {len(rows)} nouvelles entreprises — restauration ({day})", body)
+    print(f"test envoyé à {to} depuis {os.environ['SENDER_EMAIL']} · HTTP {status}")
+
+
 def main():
+    if os.environ.get("TEST_TO"):
+        return test_send(os.environ["TEST_TO"])
     dry = os.environ.get("DRY_RUN") == "1" or not os.environ.get("BREVO_API_KEY")
     since = last_sent()
     latest = con_latest()
