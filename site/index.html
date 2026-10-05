@@ -110,6 +110,8 @@ header .wrap{display:flex;align-items:center;justify-content:space-between;gap:1
 .plan ul{padding-left:18px;margin:18px 0 24px}
 .plan li{margin:6px 0}
 .plans-note{margin-top:22px}
+.plan-actions{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.subscribe{font-size:15px}
 
 /* Formulaire d'essai */
 .trial{background:var(--mist)}
@@ -247,19 +249,19 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
         <h3>Essentiel</h3>
         <p class="price">29 €<small> / mois</small></p>
         <ul><li>1 secteur</li><li>Jusqu'à 3 départements</li><li>Email chaque matin</li><li>Export CSV</li></ul>
-        <a class="btn light" href="#essai">Essayer 7 jours</a>
+        <div class="plan-actions"><a class="btn light" href="#essai">Essayer 7 jours</a><a class="subscribe" data-plan="essentiel" href="#" hidden>S'abonner directement</a></div>
       </div>
       <div class="plan main">
         <h3>Pro</h3>
         <p class="price">49 €<small> / mois</small></p>
         <ul><li>Jusqu'à 3 secteurs</li><li>Toute une région</li><li>Email chaque matin</li><li>Export CSV</li></ul>
-        <a class="btn" href="#essai">Essayer 7 jours</a>
+        <div class="plan-actions"><a class="btn" href="#essai">Essayer 7 jours</a><a class="subscribe" data-plan="pro" href="#" hidden>S'abonner directement</a></div>
       </div>
       <div class="plan">
         <h3>Marchés attribués</h3>
         <p class="price">39 €<small> / mois</small></p>
         <ul><li>Marchés notifiés dans votre région</li><li>Filtrés par famille (BTP, nettoyage, espaces verts…)</li><li>Montant et fiche du titulaire</li><li>Email chaque semaine</li></ul>
-        <a class="btn light" href="#essai">Essayer 7 jours</a>
+        <div class="plan-actions"><a class="btn light" href="#essai">Essayer 7 jours</a><a class="subscribe" data-plan="marches" href="#" hidden>S'abonner directement</a></div>
       </div>
     </div>
     <p class="plans-note muted">Option cumulable avec Essentiel ou Pro. Besoin de plusieurs régions ? <a href="mailto:contact@radar-entreprises.fr">Écrivez-nous</a>.</p>
@@ -324,9 +326,22 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
 <footer>
   <div class="wrap">
     <span>Radar Entreprises. Données : BODACC et DECP, Licence Ouverte 2.0.</span>
-    <span><a href="mailto:contact@radar-entreprises.fr">contact@radar-entreprises.fr</a> · <a href="/mentions-legales.html">Mentions légales et données personnelles</a></span>
+    <span><a href="mailto:contact@radar-entreprises.fr">contact@radar-entreprises.fr</a> · <a id="portail" href="#" hidden>Gérer mon abonnement</a> · <a href="/mentions-legales.html">Mentions légales et données personnelles</a></span>
   </div>
 </footer>
 
+<script>
+/* Les liens de paiement Stripe sont publiés dans stripe.json une fois le compte activé.
+   Tant qu'il n'existe pas, seuls les boutons d'essai gratuit sont visibles. */
+fetch("/stripe.json", {cache: "no-store"}).then(r => r.ok ? r.json() : null).then(cfg => {
+  if (!cfg) return;
+  document.querySelectorAll(".subscribe").forEach(a => {
+    const p = cfg.plans && cfg.plans[a.dataset.plan];
+    if (p && p.url) { a.href = p.url; a.hidden = false; }
+  });
+  const portail = document.getElementById("portail");
+  if (cfg.portail) { portail.href = cfg.portail; portail.hidden = false; }
+}).catch(() => {});
+</script>
 </body>
 </html>

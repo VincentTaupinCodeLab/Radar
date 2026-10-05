@@ -40,6 +40,9 @@ jobs:
       - name: BODACC (créations + cessions, toute la France)
         run: python pipeline.py --days 3
 
+      - name: Tests du parcours abonné
+        run: python tests/test_parcours.py
+
       - name: DECP (marchés attribués, 30 derniers jours, toute la France)
         if: ${{ !inputs.test_to }}
         run: python decp.py --days 30 --region all
@@ -50,6 +53,9 @@ jobs:
           SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
           SENDER_NAME: Radar Entreprises
           TEST_TO: ${{ inputs.test_to }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          NETLIFY_SITE_ID: e3b00484-2068-48ed-b60e-08fcffb9acf9
         run: python sender.py
 
       - name: Sauvegarde de la base (cache)
@@ -59,10 +65,10 @@ jobs:
           path: radar.db
           key: radar-db-${{ github.run_id }}
 
-      - name: Sauvegarde de l'état d'envoi
+      - name: Sauvegarde de l'état d'envoi et des essais
         run: |
           git config user.name "radar-bot"
           git config user.email "radar-bot@users.noreply.github.com"
-          git add state/ || true
+          git add state/ subscribers.json || true
           git diff --cached --quiet || git commit -m "data: run $(date -u +%F)"
           git push

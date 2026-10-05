@@ -24,7 +24,20 @@ API = ("https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/"
 OUT = Path(__file__).parent / "out"
 
 REGIONS = {  # code région INSEE -> départements
+    "11": ["75", "77", "78", "91", "92", "93", "94", "95"],
+    "24": ["18", "28", "36", "37", "41", "45"],
+    "27": ["21", "25", "39", "58", "70", "71", "89", "90"],
+    "28": ["14", "27", "50", "61", "76"],
+    "32": ["02", "59", "60", "62", "80"],
+    "44": ["08", "10", "51", "52", "54", "55", "57", "67", "68", "88"],
+    "52": ["44", "49", "53", "72", "85"],
+    "53": ["22", "29", "35", "56"],
     "75": ["16", "17", "19", "23", "24", "33", "40", "47", "64", "79", "86", "87"],
+    "76": ["09", "11", "12", "30", "31", "32", "34", "46", "48", "65", "66", "81", "82"],
+    "84": ["01", "03", "07", "15", "26", "38", "42", "43", "63", "69", "73", "74"],
+    "93": ["04", "05", "06", "13", "83", "84"],
+    "94": ["2A", "2B"],
+    "01": ["971"], "02": ["972"], "03": ["973"], "04": ["974"], "06": ["976"],
 }
 
 CPV_FAMILIES = [  # préfixe CPV -> famille lisible
@@ -79,6 +92,50 @@ def in_zone(rec: dict, region: str, depts: list) -> bool:
     if "postal" in typ or "commune" in typ:
         return code[:2] in depts
     return code[:2] in depts  # code département ou autre
+
+
+def depts_of(rec: dict) -> set:
+    """Départements concernés par un marché, d'après son lieu d'exécution."""
+    code = str(rec.get("lieuexecution_code") or "").strip()
+    typ = (rec.get("lieuexecution_typecode") or "").lower()
+    if not code:
+        return set()
+    if "région" in typ or "region" in typ:
+        return set(REGIONS.get(code.zfill(2), []))
+    if code[:2] == "97":
+        return {code[:3]}
+    if code[:2] == "20" and ("postal" in typ or "commune" in typ):
+        return {"2A", "2B"}
+    return {code[:2]}
+
+
+def collect(since: str) -> list:
+    """Marchés notifiés depuis `since`, dédoublonnés, avec leurs départements."""
+    seen, rows = set(), []
+    for r in fetch(f'datenotification>="{since}"'):
+        key = (r.get("id"), r.get("acheteur_id"))
+        if key in seen:  # les modifications dupliquent les lignes
+            continue
+        seen.add(key)
+        siret = str(r.get("titulaire_id_1") or "").zfill(14)
+        rows.append({
+            "date_notification": r.get("datenotification"),
+            "famille": cpv_family(r.get("codecpv")),
+            "objet": (r.get("objet") or "").strip(),
+            "montant": r.get("montant"),
+            "titulaire_fiche": f"https://annuaire-entreprises.data.gouv.fr/etablissement/{siret}",
+            "departements": sorted(depts_of(r)),
+        })
+    return rows
+
+
+def email_marches(rows: list, depts: list, since: str) -> str:
+    """Email hebdomadaire « marchés attribués » pour un abonné."""
+    fams = {}
+    for r in sorted(rows, key=lambda x: -(x["montant"] or 0)):
+        fams.setdefault(r["famille"], []).append(r)
+    return render(fams, since).replace(
+        "<h1>Marchés publics attribués depuis le", f"<h1>Marchés attribués ({', '.join(depts)}) depuis le")
 
 
 def main():

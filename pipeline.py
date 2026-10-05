@@ -246,7 +246,7 @@ def export(rows: list, label: str):
     return by_sector
 
 
-def email_html(sector: str, items: list, label: str) -> str:
+def email_html(sector: str, items: list, label: str, footer: str = "") -> str:
     title = sector.replace("_", " ").capitalize()
     items = sorted(items, key=lambda r: (r["departement"], r["ville"]))
     rows = []
@@ -272,8 +272,9 @@ table{{border-collapse:collapse;width:100%}} td{{border-top:1px solid #e5e5e5;pa
 <h1>{len(items)} nouvelles entreprises — {title}</h1>
 <div class=m>Période : {label} · Source : BODACC (données publiques, Licence Ouverte)</div>
 <table>{''.join(rows)}</table>
-<div class=note>Données issues de publications légales officielles. Vous pouvez vous désinscrire à tout moment.
-Toute personne mentionnée peut s'opposer à l'utilisation de ses données à des fins de prospection.</div>
+<div class=note>{footer}Données issues de publications légales officielles (BODACC).
+Toute personne mentionnée peut s'opposer à l'utilisation de ses données à des fins de prospection :
+contact@radar-entreprises.fr.</div>
 """
 
 

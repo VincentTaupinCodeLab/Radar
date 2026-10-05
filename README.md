@@ -44,3 +44,17 @@ Les annonces BODACC sont dédoublonnées dans `radar.db` (SQLite).
 2. Enrichissement SIRENE (nom, NAF, effectif) côté production.
 3. Page de vente + paiement Stripe + essai gratuit 7 jours.
 4. Publication de 2 outils sur Apify (même code).
+
+## Paiement et abonnés (Stripe)
+
+- `billing.py setup` crée (une seule fois, sans doublon) les 3 offres, leurs liens de paiement
+  et le portail client, puis écrit `site/stripe.json`. Le site affiche alors les boutons
+  « S'abonner directement » et le lien « Gérer mon abonnement ».
+- Chaque matin, `sender.py` lit les abonnements actifs dans Stripe : un client qui paie reçoit
+  ses alertes, un client qui résilie n'en reçoit plus. Aucune base de données à tenir.
+- Essais gratuits : inscriptions du formulaire importées depuis Netlify (secret `NETLIFY_TOKEN`),
+  email de bienvenue, 7 jours d'alertes, email de fin d'essai avec le lien de l'offre adaptée.
+- `tests/test_parcours.py` vérifie tout le parcours sans réseau (exécuté à chaque passage).
+
+Secrets GitHub : `BREVO_API_KEY`, `SENDER_EMAIL`, `STRIPE_SECRET_KEY` (à ajouter au lancement),
+`NETLIFY_TOKEN` (facultatif, pour l'import automatique des essais).
