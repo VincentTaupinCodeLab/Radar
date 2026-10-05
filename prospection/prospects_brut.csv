@@ -1,0 +1,79 @@
+categorie,nom,site,email,autres_emails,code_postal,departement,siren,pages_lues,statut
+boissons,Accueil - CHARENTE BOISSONS SERVICES,https://www.charente-boissons-services.fr/,,,16270,16,424761419,3,pas d'email publié
+boissons,Accueil - Sorhobis Boissons,https://sorhobis.fr/,contact@sorhobis.fr,contact@sorhobis.com,13690,13,493425276,3,ok
+boissons,Grossiste en boissons et matériel CHR | Bouches-du-Rhône - Rossi Boissons,https://www.rossiboissons.fr/,,,13008,13,,3,pas d'email publié
+boissons,,https://www.tribouilletchartres.fr/,,,,,,,inaccessible (URLError)
+boissons,Distriboissons | 1er réseau de distributeurs grossistes en boissons,https://www.distriboissons.com/,contact@distriboissons.com,,75017,75,403503741,4,ok
+boissons,montanerpietriniboissons.com,https://montanerpietriniboissons.com/,,,,,,1,pas d'email publié
+boissons,Accueil - CHR BOISSONS,https://www.chrboissons.com/,,,58300,58,400674875,3,pas d'email publié
+boissons,Accueil | Obiervin,https://obiervin.fr/,contact@obiervin.fr,admin@obiervin.fr,44110,44,,4,ok
+boissons,Granger - Distributeur pour CHR dans la région Centre-Val de Loire,https://www.ets-granger.fr/,,,45300,45,,3,pas d'email publié
+boissons,Accueil - Atlantique Boissons,https://www.atlantique-boissons.fr/,,,35330,35,433115904,3,pas d'email publié
+boissons,Alary Boissons Fournisseur boissons Narbonne Béziers Montpellier,https://alaryboissons.com/,alaryboissons@gmail.com,,34500,34,919599266,4,ok
+boissons,Occitanie Boissons | Grossiste en Boissons pour les Professionnels et Associations,https://occitanieboissons.com/,contact@occitanieboissons.com,commercial@occitanieboissons.com,31140,31,519664346,3,ok
+boissons,Rhône-Alpes Distribution - Fournisseur de boissons en Rhône-Alpes,https://rhonealpesdistribution.fr/,contact@rhonealpesdistribution.fr,juridique@rhonealpesdistribution.fr;marketing@rhonealpesdistribution.fr,15405,15,789694262,3,ok
+boissons,Le Comptoir de la Bière | Distributeur de boissons pour professionnels,https://www.comptoirdelabiere.com/,contact@comptoirdelabiere.net,,85600,85,504303702,6,ok
+cafe,"Café artisanal torréfié en France | Caldo, torréfacteur",https://caldo-torrefaction.fr/,contact@caldo-torrefaction.fr,contact@caldo-torrefaction.com;contact@caldo-torrefaction.comadresse,69124,69,884359068,4,ok
+cafe,,https://www.cafes-breizhiliens.fr/,,,,,,,inaccessible (URLError)
+cafe,Cafés Bibal Torréfacteur depuis 1955,https://cafes-bibal.fr/,info@cafes-bibal.fr,boutique@cafes-bibal.fr;service.client@cafes-bibal.fr,34130,34,382270536,3,ok
+cafe,"Judicieux - Torréfacteur à Nantes - Cafés en grains et moulus
+ – Judicieux Torréfacteur",https://www.judicieux.com/,atelier.judicieux@gmail.com,,44000,44,,3,ok
+cafe,Cafés Le Gascon | Torréfacteur Artisanal à Pau (64),https://cafes-legascon.com/,boutique@cafes-legascon.com,,64320,64,,2,ok
+cafe,Torréfacteur de café de spécialité artisanal à Lyon : Owl Brothers,https://www.owlbrothers.com/,info@owlbrothers.com,contact@owlbrothers.com,69680,69,812731529,4,ok
+cafe,Fournisseur café pour les professionnels | Cafés et Torréfaction Pikaro,https://cafes-pikaro.pro/,,,59494,59,532364627,4,pas d'email publié
+cafe,"Les Torréfacteurs Français: une marque de café, distributeur et fournisseur professionnel",https://lestorrefacteurs.cafe/,,,76000,76,821231594,4,pas d'email publié
+cafe,Café pour professionnels à Toulouse – Torréfacteur,https://www.labruleriedesfilatiers.fr/,contact@labruleriedesfilatiers.fr,,31000,31,797666096,3,ok
+cafe,Cafés Gonéo – Maison de torréfaction lyonnaise l Cafés de spécialité,https://www.cafes-goneo.fr/,adv@cafes-goneo.fr,,69800,69,,2,ok
+cafe,LOUTSA TORREFACTEUR : Café en grain | 100% Arabica | SPECIALTY COFFEE,https://www.loutsa.fr/,contact@loutsa.fr,adv@loutsa.fr;ateliers@loutsa.fr;patrice.ouerdi@loutsa.fr,69007,69,842429185,3,ok
+cafe,"Cafés FOLLIET | Torréfacteur, spécialiste des boissons chaudes et du petit-déjeuner",https://www.cafes-folliet.com/,contacteznous@cafes-folliet.com,,73004,73,,4,ok
+cafe,"Torréfacteur de cafés de spécialité
+– Hayuco Coffee Roasters",https://www.hayuco.coffee/,hello@hayuco.coffee,shop@hayuco.coffee,31000,31,,2,ok
+comptable,"Cabinet Comptable EXTENCIA situé à Bordeaux, Paris et Lyon",https://www.extencia.fr/,contact@extencia.fr,extencia@extencia.fr,33070,33,327136016,3,ok
+comptable,ATACIA – Votre Cabinet Comptable à Bordeaux (33),https://atacia.fr/,contact@atacia.fr,chloe@atacia.fr,33700,33,502664915,2,ok
+comptable,Cabinet d’expertise comptable à Paris - GT Expertise,https://gt-expertise.fr/,contact@gt-expertise.fr,,,,,4,ok
+comptable,Cabinets d'expertise comptable et gestion d'entreprise Bordeaux et Sud-Ouest,https://www.erecapluriel.fr/,lege@erecapluriel.fr,lucon@erecapluriel.fr;langon@erecapluriel.fr;salles@erecapluriel.fr,33800,33,,3,ok
+comptable,"Accueil - CI 33, Expert-comptable à Bordeaux et Arès",https://www.ci33.fr/,contact@ci33.fr,,33000,33,383362431,3,ok
+comptable,,https://www.compta-intouch.com/,,,,,,,inaccessible (HTTPError)
+comptable,CECCA : Cabinet d'expert-comptable connecté et engagé,https://cecca.fr/,info@cecca.fr,,75017,75,431303775,5,ok
+comptable,,https://www.experias.fr/,,,,,,,inaccessible (HTTPError)
+comptable,Expert-comptable International à Paris | Conseil Opérationnel,https://www.interexco.fr/,contact@interexco.fr,ncontact@interexco.fr,75009,75,,4,ok
+comptable,KER : Expert Comptable,https://kerconseil.fr/,contact@kerconseil.fr,,44100,44,977839307,3,ok
+comptable,Expert-Comptable Restaurant à Paris — Spécialiste Restauration | Compta Resto,https://comptaresto.com/,contact@comptaresto.com,,75017,75,948823182,3,ok
+comptable,VALUE CONSEIL RESTAURATION - VALUE CONSEIL RESTAURATION,https://expertcomptable-restauration.com/,,,75020,75,,2,pas d'email publié
+comptable,Expert Comptable À Paris | Cabinet Moov Paris | Paris,https://www.moov.paris/,contact@moov.paris,,75012,75,,2,ok
+caisse,"Solutions d'encaissement et de paiement, installation alarme et vidéosurveillance Bordeaux",https://www.tbsys.fr/,devis@tbsys.fr,,33270,33,,4,ok
+caisse,uSEOme : Création Site Internet - Vente Caisse Enregistreuse Tactile Certifiée,https://www.useome.fr/,info@useome.fr,devis@useome.fr,75005,75,,2,ok
+caisse,Vente et installation solutions d’encaissement - TEG France,https://teg-france.fr/,,,33170,33,488930777,3,pas d'email publié
+caisse,ACS - Des solutions d’encaissement adaptées à votre activité - ACS,https://caissesenregistreuses.fr/,,,17140,17,450193875,4,pas d'email publié
+caisse,Caisse enregistreuse NF525 Hauts-de-France | TEC,https://tec-encaissements.fr/,contact@tec-encaissements.fr,,59830,59,,2,ok
+caisse,Solutions d'encaissement nouvelle génération | 6Xpos,https://6xpos.fr/,,,,,,4,pas d'email publié
+caisse,"DCB Technologies | Caisse NF525, informatique et web, 71 69 01 42",https://dcb-technologies.fr/,contact@dcb-technologies.fr,,,,,2,ok
+caisse,"Artémis solutions - Logiciels de caisse tactile, agence web",https://www.artemis-solutions.fr/,contact@artemis-solutions.fr,,63700,63,,1,ok
+caisse,Caisse Enregistreuse & TPE à Marseille 13 - SODECO,https://www.sodeco-france.com/,contact@sodeco-france.com,,13006,13,,3,ok
+caisse,Caisse enregistreuse DGsys : réinventez votre expérience de vente,https://www.dgsys.fr/,contact@dgsys.fr,,44300,44,539781963,5,ok
+cuisine_pro,Installation et Dépannage Matériel CHR à Bordeaux - ID Cuisine Pro,https://idcuisinepro.fr/,contact@idcuisinepro.fr,,33360,33,,1,ok
+cuisine_pro,Achat de matériel de restauration pro à Bordeaux | PM Equipement,https://pmequipement.fr/,,,33300,33,908893332,3,pas d'email publié
+cuisine_pro,Cuisine professionnelle – Vente et installation d’équipement – Négoce CHR,https://www.negoce-chr.com/,info@negoce-chr.com,,85160,85,,3,ok
+cuisine_pro,Leader de la cuisine professionnelle à Lyon et alentours  - Martinon,https://www.martinon.fr/,contact@martinon.cc,,69360,69,389573064,3,ok
+cuisine_pro,"HRC Diffusion : équipement professionnel pour les restaurants, hôtels, cafés",https://www.hrcdiffusion.fr/,hrcdiffusion@gmail.com,,59053,59,,4,ok
+cuisine_pro,"Dépanneur, installateur, maintenance cuisine professionnelle France - SOS CHR",https://sos-chr.com/,contact@sos-chr.com,,31180,31,,2,ok
+assurance,Groupe Satec | Courtier en assurances depuis 1965,https://satecassur.com/,,,92300,92,784395725,5,pas d'email publié
+assurance,"GEA ᐅ Courtier en Assurance pour Château, Hôtel, Restaurant HCR",https://www.gea-assurances.com/,commercial@gea-assurances.com,sfanon@gea-assurances.com;cneider@gea-assurances.com;bbonneau@gea-assurances.com,91470,91,,5,ok
+assurance,Pilliot Assurances – Courtier pour les professionnels & particuliers,https://pilliot-assurances.com/,,,62120,62,,1,pas d'email publié
+assurance,Vente de restaurant à Paris – Agence spécialisée CHR | Pantheon Conseil,https://www.pantheonconseil.com/,,,75009,75,909356941,3,pas d'email publié
+assurance,"Assurance, mutuelle et prévoyance pour restaurateurs Assur Resto",https://assurresto.com/,hello@assurresto.com,,75009,75,988869962,4,ok
+emballage,Emballage alimentaire pro pas cher | Grossiste pour vente à emporter,https://papafrance.fr/,contact@papafrance.fr,,25347,25,,2,ok
+emballage,SML Food Plastic: Emballage alimentaire professionnel,https://www.smlfoodplastic.fr/,contact.smlfoodplastic@gmail.com,,94220,94,410142285,3,ok
+emballage,"Emballage alimentaire pas cher - Fournisseur, grossiste pour les professionnels de la Boul",https://www.packeos.com/,service.commercial@packeos.com,,68000,68,504351818,2,ok
+emballage,Emballage alimentaire professionnel : PKG FOOD,https://www.pkgfood.fr/,webcontact@pkgfood.fr,,75002,75,,2,ok
+emballage,,https://packvert.com/,,,,,,,inaccessible (URLError)
+emballage,L'emballage alimentaire est notre spécialité,https://www.jorideal.fr/,contact@jorideal.fr,,42160,42,,6,ok
+web,Azelty • Agence web WordPress à Vannes,https://azelty.fr/,,,56000,56,,3,pas d'email publié
+web,Agence Communication spécialisé dans la restauration,https://agence-communication-restauration.fr/,,,,,,3,pas d'email publié
+web,Agence web à Bordeaux : création de site internet – EVICO,https://evico.fr/,contact@evico.fr,victor@evico.fr,33000,33,,3,ok
+web,"Agence Web Béziers - Création site internet, Ecommerce & SEO - Devis gratuit",https://www.publiko.fr/,contact@publiko.fr,,34500,34,828680553,6,ok
+web,Agence web Brest – Création de site web SEO - Web armor,https://agence-web-armor.fr/,,,29870,29,979002938,2,pas d'email publié
+web,Peechy - Agence Web Premium Paris & Tel Aviv | Sur-Mesure,https://peechy.fr/,contact@peechy.fr,u003econtact@peechy.fr,,,,3,ok
+web,"Agence de communication Angers - Design, Web & Branding",https://agence-dbw.fr/,contact@agence-dbw.fr,,,,,1,ok
+web,Agence web Nantes – Création sites internet – Agence LATELIER,https://www.latelier-conceptionweb.com/,contact@latelier-conceptionweb.com,,44000,44,831519350,3,ok
+web,"Création site internet sur mesure | UX, UI & Dev – Agence2web",https://www.agence2web.com/,contact@agence2web.com,,75017,75,537928236,3,ok
