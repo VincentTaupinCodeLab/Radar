@@ -3,147 +3,167 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Radar Entreprises — les nouvelles entreprises de votre zone, chaque matin</title>
-<meta name="description" content="Partout en France, chaque matin, la liste des entreprises créées ou reprises la veille dans votre secteur et vos départements. Pour les fournisseurs, grossistes, assureurs et experts-comptables.">
+<title>Radar Entreprises — les nouvelles entreprises de votre secteur, chaque matin</title>
+<meta name="description" content="Chaque matin à 7 h, les entreprises créées ou reprises la veille dans votre secteur et vos départements, triées à partir du BODACC. Pour les fournisseurs, assureurs et experts-comptables. Essai gratuit 7 jours.">
+<meta property="og:title" content="Radar Entreprises">
+<meta property="og:description" content="Les nouvelles entreprises de votre secteur, chaque matin à 7 h. Essai gratuit 7 jours, sans carte bancaire.">
+<meta property="og:url" content="https://radar-entreprises.fr/">
+<meta name="theme-color" content="#FFE34A">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='9' width='28' height='15' rx='4' transform='rotate(-6 16 16)' fill='%23FFE34A'/%3E%3Cpath d='M9 22V10h6.2c2.6 0 4.3 1.5 4.3 3.8 0 1.8-1 3-2.7 3.5L20 22h-3.3l-2.8-4.4H12V22z M12 15.2h3c1 0 1.6-.6 1.6-1.4S16 12.4 15 12.4h-3z' fill='%231D2125'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..800&family=Public+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
 <style>
-:root{
-  --ink:#14213D;        /* encre : textes, fonds sombres */
-  --paper:#FFFFFF;
-  --mist:#EEF1F5;       /* fonds de section */
-  --line:#D5DBE3;
-  --muted:#5B6576;
-  --signal:#F2B705;     /* surligneur : ce qui est nouveau */
-  --signal-soft:#FCEBB0;
-  --link:#1F4FD1;
-  --radius-s:4px; --radius-l:14px;
-}
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.6 "Public Sans",system-ui,sans-serif}
-a{color:var(--link)}
-:focus-visible{outline:3px solid var(--signal);outline-offset:2px}
-h1,h2,h3{font-family:"Archivo",system-ui,sans-serif;font-stretch:112%;line-height:1.08;margin:0}
-h1{font-size:clamp(32px,4.6vw,52px);font-weight:800;letter-spacing:-.01em}
-h2{font-size:clamp(26px,3.4vw,36px);font-weight:750}
-h3{font-size:20px;font-weight:700;font-stretch:105%}
-p{margin:0}
-.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
-.narrow{max-width:68ch}
-section{padding:88px 0}
-.muted{color:var(--muted)}
+/* ---------- Héros ---------- */
+.hero{padding:56px 0 88px}
+.hero .wrap{display:grid;grid-template-columns:1fr minmax(0,540px);gap:64px;align-items:center}
+.hero h1{text-wrap:balance}
+.hero .lead{font-size:20px;margin:24px 0 32px;max-width:36ch}
+.actions{display:flex;gap:14px 22px;flex-wrap:wrap;align-items:center}
+.fine{margin-top:18px;font-size:14px}
 
-/* En-tête */
-header{padding:22px 0}
-header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px}
-.logo{font-family:"Archivo";font-weight:800;font-stretch:118%;font-size:19px;text-decoration:none;color:var(--ink);display:flex;align-items:center;gap:10px}
-.logo svg{flex:none}
-.btn{display:inline-block;font:600 16px/1 "Public Sans";background:var(--ink);color:#fff;text-decoration:none;padding:15px 22px;border-radius:var(--radius-s);border:0;cursor:pointer}
-.btn:hover{background:#22325a}
-.btn.light{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+/* L'alerte du matin, telle qu'elle arrive */
+.mail{margin:0}
+.mail-card{background:var(--paper);border:1px solid var(--rule);border-radius:10px;
+  box-shadow:0 1px 0 var(--rule),0 24px 48px -28px rgba(29,33,37,.38);overflow:hidden}
+.mail-top{padding:16px 20px 14px;border-bottom:1px solid var(--rule)}
+.mail-top .from{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.mail-top .subject{font-weight:700;margin-top:3px;line-height:1.35}
+.entry{display:grid;grid-template-columns:1fr auto;gap:3px 16px;padding:13px 20px;border-bottom:1px solid var(--rule)}
+.entry .name{font-weight:700;font-size:16px;line-height:1.3}
+.entry .act{font-size:14px;color:var(--muted);line-height:1.4}
+.entry .place{grid-row:1/3;grid-column:2;text-align:right;font-size:14px;line-height:1.4}
+.entry .kind{font-size:12px;color:var(--muted);display:block}
+.mail-more{padding:13px 20px;font-size:14px;color:var(--muted);background:var(--gazette)}
+.mail figcaption{font-size:13px;color:var(--muted);margin-top:12px;max-width:52ch}
 
-/* Héros : le bulletin du matin est la pièce maîtresse */
-.hero{padding:40px 0 96px}
-.hero .wrap{display:grid;grid-template-columns:1fr 1.08fr;gap:56px;align-items:start}
-.hero p.lead{font-size:20px;margin:22px 0 30px;max-width:34ch}
-.hero .actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.hero .fine{margin-top:16px;font-size:14px}
-
-.mail{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-l);box-shadow:0 30px 60px -30px rgba(20,33,61,.35);overflow:hidden}
-.mail-top{padding:16px 20px;border-bottom:1px solid var(--line);background:var(--mist)}
-.mail-top .from{font-size:13px;color:var(--muted)}
-.mail-top .subject{font-weight:600;margin-top:2px}
-.mail-top time{float:right;font-size:13px;color:var(--muted)}
-.entry{display:grid;grid-template-columns:1fr auto;gap:2px 14px;padding:13px 20px;border-bottom:1px solid var(--line)}
-.entry:last-child{border-bottom:0}
-.entry .name{font-weight:600}
-.entry .act{grid-column:1/2;font-size:14px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.entry .place{grid-row:1/3;grid-column:2;text-align:right;font-size:14px;align-self:center}
-.tag{display:inline-block;font-size:12px;font-weight:600;padding:1px 7px;border-radius:3px;margin-left:8px;vertical-align:2px}
-.tag.new{background:var(--signal)}
-.tag.reprise{background:var(--signal-soft)}
-.mail-more{padding:12px 20px;font-size:14px;color:var(--muted);background:var(--mist)}
+/* Le seul mouvement de la page : le surligneur passe sur chaque nouveauté */
 @media (prefers-reduced-motion:no-preference){
-  .entry{animation:arrive .5s both}
-  .entry:nth-child(2){animation-delay:.15s}.entry:nth-child(3){animation-delay:.3s}
-  .entry:nth-child(4){animation-delay:.45s}.entry:nth-child(5){animation-delay:.6s}
-  .entry:nth-child(6){animation-delay:.75s}
-  @keyframes arrive{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .mail .hl{animation:mark .55s cubic-bezier(.3,.7,.3,1) both}
+  .entry:nth-of-type(1) .hl{animation-delay:.35s}
+  .entry:nth-of-type(2) .hl{animation-delay:.6s}
+  .entry:nth-of-type(3) .hl{animation-delay:.85s}
+  .entry:nth-of-type(4) .hl{animation-delay:1.1s}
+  .entry:nth-of-type(5) .hl{animation-delay:1.35s}
+  @keyframes mark{from{background-size:0% 72%}to{background-size:100% 72%}}
 }
 
-/* Pour qui */
-.who{background:var(--mist)}
-.who-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px 48px;margin-top:40px}
-.who-grid p{margin-top:8px}
+/* ---------- Volumes réels ---------- */
+.volumes{background:var(--gazette)}
+.vol-head{display:grid;grid-template-columns:1fr 1fr;gap:24px 64px;align-items:end}
+.vol-head p{max-width:46ch}
+.bars{list-style:none;margin:48px 0 0;padding:0;border-top:2px solid var(--ink)}
+.bars li{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) 64px;gap:4px 24px;
+  align-items:center;padding:16px 0;border-bottom:1px solid var(--rule)}
+.bars .who b{display:block;font-weight:700}
+.bars .who span{font-size:14px;color:var(--muted)}
+.bars .track{height:14px}
+.bars .fill{display:block;height:100%;width:var(--w);background:var(--fluo);border-radius:2px 5px 3px 6px;
+  box-shadow:inset 0 -2px 0 rgba(0,0,0,.06)}
+.bars .n{font-weight:800;font-size:22px;text-align:right;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.vol-note{margin-top:18px;font-size:14px}
 
-/* Comment ça marche : vraie séquence, donc numérotée */
-.steps{list-style:none;padding:0;margin:40px 0 0;display:grid;grid-template-columns:repeat(3,1fr);gap:36px;counter-reset:s}
-.steps li{counter-increment:s;border-top:3px solid var(--ink);padding-top:16px}
-.steps li::before{content:counter(s);font:800 15px "Archivo";display:block;margin-bottom:6px}
-.steps p{margin-top:8px;color:var(--muted)}
+/* ---------- Comment ça marche ---------- */
+.how .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px;align-items:start}
+.gazette{background:var(--gazette);border-radius:8px;padding:22px;font-size:13px;line-height:1.5;position:relative}
+.gazette .ghost{display:block;height:9px;border-radius:2px;background:#DCDED7;margin:7px 0}
+.gazette .gap{height:16px}
+.gazette .real{background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:12px 14px;margin:14px 0;color:var(--ink)}
+.gazette .real p+p{margin-top:2px}
+.gazette .src{display:block;font-size:12px;color:var(--muted);margin-top:4px}
+.steps{list-style:none;padding:0;margin:32px 0 0;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:40px 1fr;gap:0 12px;padding:18px 0;border-top:1px solid var(--rule)}
+.steps li::before{content:counter(s);font-weight:800;font-size:15px;width:30px;height:30px;border-radius:50%;
+  border:2px solid var(--ink);display:grid;place-items:center;line-height:1}
+.steps p{grid-column:2;margin-top:4px;color:var(--muted)}
+.vs{margin-top:28px;padding:18px 20px;border-left:4px solid var(--fluo);background:var(--paper)}
 
-/* Secteurs */
-.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
-.chip{border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:15px;background:var(--paper)}
-.chip b{font-weight:600}
-
-/* Marchés attribués */
-.markets{background:var(--ink);color:#fff}
-.markets .muted{color:#B9C2D3}
-.markets a{color:#fff}
-.mk-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:56px;align-items:start}
-.mk-list{border-top:1px solid #34446b}
-.mk{display:grid;grid-template-columns:1fr auto;gap:4px 16px;padding:14px 0;border-bottom:1px solid #34446b}
-.mk .amt{font-family:"Archivo";font-weight:700;font-stretch:110%;white-space:nowrap}
-.mk .meta{font-size:14px;color:#B9C2D3}
-.mk-total{margin-top:22px;font-size:15px}
-.mk-total strong{font-family:"Archivo";font-size:30px;font-stretch:115%;display:block;color:var(--signal)}
-
-/* Tarifs */
-.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
-.plan{border:1px solid var(--line);border-radius:var(--radius-l);padding:28px}
+/* ---------- Tarifs ---------- */
+.plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:40px}
+.plan{border:1px solid var(--rule);border-radius:10px;padding:28px;display:flex;flex-direction:column}
 .plan.main{border:2px solid var(--ink)}
-.price{font:800 44px/1 "Archivo";font-stretch:110%;margin:16px 0 4px}
-.price small{font:400 16px "Public Sans";color:var(--muted)}
-.plan ul{padding-left:18px;margin:18px 0 24px}
-.plan li{margin:6px 0}
-.plans-note{margin-top:22px}
-.plan-actions{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
-.subscribe{font-size:15px}
+.plan .for{color:var(--muted);margin-top:4px;font-size:15px}
+.price{font-weight:800;font-size:48px;line-height:1;letter-spacing:-.03em;margin:20px 0 0;font-variant-numeric:tabular-nums}
+.price small{font-weight:400;font-size:16px;letter-spacing:0;color:var(--muted)}
+.plan ul{padding:0;margin:20px 0 28px;list-style:none;flex:1}
+.plan li{padding:8px 0 8px 26px;border-top:1px solid var(--rule);position:relative}
+.plan li::before{content:"";position:absolute;left:2px;top:15px;width:12px;height:7px;border:solid var(--ink);
+  border-width:0 0 2px 2px;transform:rotate(-45deg)}
+.plan-actions{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center}
+.subscribe{font-size:15px;font-weight:600}
 
-/* Formulaire d'essai */
-.trial{background:var(--mist)}
-.trial .wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:start}
-form{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-l);padding:28px;display:grid;gap:18px}
-label{display:grid;gap:6px;font-weight:600;font-size:15px}
-label span{font-weight:400;color:var(--muted);font-size:14px}
-input,select,textarea{font:inherit;font-size:16px;padding:12px 14px;border:1px solid #AAB4C3;border-radius:var(--radius-s);background:#fff;color:var(--ink);width:100%}
-fieldset{border:0;padding:0;margin:0}
-legend{font-weight:600;font-size:15px;margin-bottom:8px}
+.addon{margin-top:20px;border-radius:10px;background:var(--ink);color:#fff;padding:32px;
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:24px 56px}
+.addon a{color:#fff}
+.addon .muted{color:#B7BCC2}
+.addon h3{font-size:24px}
+.addon .price{font-size:36px;margin-top:14px}
+.addon .price small{color:#B7BCC2}
+.addon .plan-actions{margin-top:22px}
+.addon .btn.light{color:#fff;box-shadow:inset 0 0 0 2px #fff}
+.addon .btn.light:hover{color:var(--ink)}
+.mk{display:grid;grid-template-columns:1fr auto;gap:2px 16px;padding:12px 0;border-bottom:1px solid #3A4047}
+.mk:first-child{border-top:1px solid #3A4047}
+.mk .amt{font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+.mk .meta{font-size:13px;color:#B7BCC2;grid-column:1/-1}
+.mk-total{margin-top:14px;font-size:14px;color:#B7BCC2}
+.mk-total b{color:var(--fluo);font-weight:700}
+.plans-note{margin-top:20px}
+
+/* ---------- Essai ---------- */
+.trial{background:var(--gazette)}
+.trial .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:64px;align-items:start}
+.promise{list-style:none;padding:0;margin:28px 0 0}
+.promise li{padding:10px 0;border-top:1px solid var(--rule)}
+form{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:28px;display:grid;gap:22px}
+label{display:grid;gap:6px;font-weight:700;font-size:15px}
+.hint{font-weight:400;color:var(--muted);font-size:14px}
+input[type=email],input[type=text]{font:inherit;font-size:16px;padding:13px 14px;border:1px solid #9EA4A9;border-radius:var(--radius);
+  background:#fff;color:var(--ink);width:100%}
+input::placeholder{color:#8A9096;font-weight:400}
+input[type=email]:focus,input[type=text]:focus{border-color:var(--ink);outline:2px solid var(--fluo);outline-offset:0}
+fieldset{border:0;padding:0;margin:0;min-width:0}
+legend{font-weight:700;font-size:15px;margin-bottom:10px;padding:0}
 .checks{display:flex;flex-wrap:wrap;gap:8px}
-.checks label{display:flex;align-items:center;gap:8px;font-weight:400;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
-.checks input{width:auto;margin:0;accent-color:var(--ink)}
-.hidden{position:absolute;left:-9999px}
+.checks label{display:flex;align-items:center;gap:8px;font-weight:400;border:1px solid var(--rule);border-radius:999px;
+  padding:7px 14px 7px 11px;cursor:pointer;font-size:15px}
+.checks label:has(input:checked){background:var(--fluo);border-color:var(--fluo)}
+.checks input,.option input,.consent input{width:18px;height:18px;margin:0;accent-color:var(--ink);flex:none}
+.option{display:flex;gap:12px;align-items:flex-start;font-weight:400;border:1px dashed #9EA4A9;border-radius:var(--radius);padding:14px;cursor:pointer}
+.option input{margin-top:3px}
+.option b{display:block}
+.depts-out{font-size:14px;font-weight:400;color:var(--muted);min-height:1.4em}
+.depts-out.ok{color:var(--ink)}
+.depts-out.warn{color:#9A3412}
 .consent{font-weight:400;font-size:14px;color:var(--muted);display:flex;gap:10px;align-items:flex-start}
-.consent input{width:auto;margin-top:4px}
+.consent input{margin-top:3px}
+.hidden{position:absolute;left:-9999px}
+form .btn{width:100%;padding:18px}
 
-/* FAQ */
-details{border-bottom:1px solid var(--line);padding:18px 0}
-summary{font-weight:600;cursor:pointer;font-size:18px}
-details p{margin-top:10px;color:var(--muted);max-width:68ch}
+/* ---------- FAQ ---------- */
+.faq{margin-top:28px;border-top:2px solid var(--ink)}
+details{border-bottom:1px solid var(--rule)}
+summary{font-weight:700;cursor:pointer;font-size:18px;padding:18px 32px 18px 0;list-style:none;position:relative}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:4px;top:14px;font-size:24px;font-weight:400;transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{padding:0 0 20px;color:var(--muted);max-width:66ch}
 
-footer{padding:40px 0 56px;font-size:14px;color:var(--muted);border-top:1px solid var(--line)}
-footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.final{text-align:left;padding:72px 0 88px}
+.final .wrap{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
 
-@media (max-width:480px){.logo{font-size:17px;white-space:nowrap}header .btn{padding:11px 14px;font-size:15px;white-space:nowrap}}
+/* ---------- Petits écrans ---------- */
 @media (max-width:880px){
-  .hero .wrap,.mk-grid,.trial .wrap{grid-template-columns:1fr;gap:40px}
-  .plans,.steps{grid-template-columns:1fr}
-  .who-grid{grid-template-columns:1fr}
-  section{padding:64px 0}
-  .entry .act{white-space:normal}
+  .hero{padding:32px 0 64px}
+  .hero .wrap,.how .wrap,.trial .wrap,.addon,.vol-head{grid-template-columns:1fr;gap:36px}
+  .plans{grid-template-columns:1fr}
+  .hero h1{text-wrap:balance}
+.hero .lead{font-size:18px;margin:16px 0 24px}
+  .hero .actions .btn{flex:1 1 auto}
+  .bars li{grid-template-columns:1fr 56px}
+  .bars .track{grid-column:1/-1;grid-row:2}
+  .addon{padding:24px}
 }
 </style>
 </head>
@@ -151,11 +171,11 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
 
 <header>
   <div class="wrap">
-    <a class="logo" href="#" aria-label="Radar Entreprises, accueil">
-      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11.5" fill="none" stroke="#14213D" stroke-width="2"/><circle cx="13" cy="13" r="6" fill="none" stroke="#14213D" stroke-width="2"/><circle cx="18.5" cy="8" r="3" fill="#F2B705"/></svg>
+    <a class="logo" href="/" aria-label="Radar Entreprises, accueil">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="9" width="28" height="15" rx="4" transform="rotate(-6 16 16)" fill="#FFE34A"/><path d="M9 22V10h6.2c2.6 0 4.3 1.5 4.3 3.8 0 1.8-1 3-2.7 3.5L20 22h-3.3l-2.8-4.4H12V22z M12 15.2h3c1 0 1.6-.6 1.6-1.4S16 12.4 15 12.4h-3z" fill="#1D2125"/></svg>
       Radar Entreprises
     </a>
-    <a class="btn light" href="#essai">Essai gratuit</a>
+    <a class="btn light small" href="#essai">Essai gratuit</a>
   </div>
 </header>
 
@@ -163,132 +183,152 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
 <section class="hero">
   <div class="wrap">
     <div>
-      <h1>Les entreprises qui ouvrent près de chez vous, chaque matin dans votre boîte mail.</h1>
-      <p class="lead">Restaurants, salons, artisans, commerces : recevez à 7 h la liste des entreprises créées ou reprises la veille, dans votre secteur et vos départements. Soyez le premier à les contacter.</p>
+      <h1>Les nouvelles entreprises de votre secteur, chaque matin à&nbsp;7&nbsp;h.</h1>
+      <p class="lead">Pour les fournisseurs, assureurs et comptables qui veulent contacter un nouveau restaurant, salon ou artisan avant leurs concurrents.</p>
       <div class="actions">
-        <a class="btn" href="#essai">Recevoir 7 jours gratuits</a>
+        <a class="btn" href="#essai">Essayer 7 jours gratuitement</a>
         <a href="#tarifs">Voir les tarifs</a>
       </div>
-      <p class="fine muted">Tous les départements de France métropolitaine et d'outre-mer. Sans carte bancaire, désinscription en un clic.</p>
+      <p class="fine muted">Sans carte bancaire. Tous les départements, métropole et outre-mer.</p>
     </div>
 
-    <figure class="mail" style="margin:0" aria-label="Exemple d'alerte reçue le matin">
-      <div class="mail-top">
-        <time>7:12</time>
-        <div class="from">Radar Entreprises</div>
-        <div class="subject">34 nouvelles entreprises en restauration (16, 17, 33)</div>
+    <figure class="mail" aria-label="Exemple d'alerte reçue le matin">
+      <div class="mail-card">
+        <div class="mail-top">
+          <div class="from"><span>Radar Entreprises</span><time>7:12</time></div>
+          <div class="subject">14 nouvelles entreprises en restauration (16, 17, 33)</div>
+        </div>
+        <div class="entry"><span class="name"><span class="hl">MAMAMIEU</span></span><span class="act">Fabrication et préparation sur place de sushis et makis</span><span class="place">Créon <span class="muted">33</span><span class="kind">création</span></span></div>
+        <div class="entry"><span class="name"><span class="hl">Comptoir Pagaille</span></span><span class="act">Restauration sur place, à emporter ou en livraison</span><span class="place">Bordeaux <span class="muted">33</span><span class="kind">création</span></span></div>
+        <div class="entry"><span class="name"><span class="hl">LE PTIT MARIUS</span></span><span class="act">Snack salé et sucré, crêpes, gaufres, glaces</span><span class="place">Châtelaillon-Plage <span class="muted">17</span><span class="kind">création</span></span></div>
+        <div class="entry"><span class="name"><span class="hl">R8</span></span><span class="act">Café bar et restaurant</span><span class="place">Bordeaux <span class="muted">33</span><span class="kind">reprise</span></span></div>
+        <div class="entry"><span class="name"><span class="hl">NOTRE NOUVELLE VIE</span></span><span class="act">Bar, snack, épicerie, presse, PMU</span><span class="place">Saint-Laurent-de-la-Prée <span class="muted">17</span><span class="kind">reprise</span></span></div>
+        <div class="mail-more">Et 9 autres, chacune avec son adresse, son numéro SIREN et le lien vers l'annonce officielle. Fichier CSV joint.</div>
       </div>
-      <div class="entry"><span class="name">MAMAMIEU<span class="tag new">Création</span></span><span class="act">Fabrication et préparation sur place de sushis et makis</span><span class="place">Créon<br><span class="muted">33</span></span></div>
-      <div class="entry"><span class="name">O'Petit Fanais<span class="tag new">Création</span></span><span class="act">Épicerie-bar</span><span class="place">Oradour-Fanais<br><span class="muted">16</span></span></div>
-      <div class="entry"><span class="name">CRAON<span class="tag reprise">Reprise</span></span><span class="act">Restauration traditionnelle et activités annexes</span><span class="place">Léoville<br><span class="muted">17</span></span></div>
-      <div class="entry"><span class="name">La Rôtisserie de Wendy<span class="tag new">Création</span></span><span class="act">Plats préparés à emporter, foires et marchés</span><span class="place">Cussac-Fort-Médoc<br><span class="muted">33</span></span></div>
-      <div class="entry"><span class="name">MAISON AGUESSEAU MAURIN<span class="tag new">Création</span></span><span class="act">Boucherie, charcuterie, traiteur</span><span class="place">La Boixe<br><span class="muted">16</span></span></div>
-      <div class="entry"><span class="name">MERALY DÉLICE<span class="tag reprise">Reprise</span></span><span class="act">Restauration rapide, vente au comptoir</span><span class="place">Bordeaux<br><span class="muted">33</span></span></div>
-      <div class="mail-more">Et 28 autres, avec activité, adresse et numéro SIREN.</div>
-      <figcaption class="hidden">Extrait réel d'une alerte de la semaine du 28 septembre 2026, issu des publications officielles du BODACC.</figcaption>
+      <figcaption>Annonces réelles publiées au BODACC le 29 septembre 2026, telles que Radar les envoie le lendemain matin.</figcaption>
     </figure>
   </div>
 </section>
 
-<section class="who">
+<section class="volumes">
   <div class="wrap">
-    <h2 class="narrow">Une nouvelle entreprise s'équipe dans ses premières semaines. Arrivez avant vos concurrents.</h2>
-    <div class="who-grid">
-      <div><h3>Fournisseurs et grossistes</h3><p>Boissons, produits frais, emballages, hygiène : un restaurant qui ouvre choisit ses fournisseurs maintenant.</p></div>
-      <div><h3>Assureurs et courtiers</h3><p>Multirisque professionnelle, décennale, prévoyance : chaque création est un contrat à signer.</p></div>
-      <div><h3>Experts-comptables</h3><p>Les nouveaux dirigeants cherchent un cabinet dès l'immatriculation.</p></div>
-      <div><h3>Caisses, terminaux, logiciels</h3><p>Encaissement, réservation, devis et factures : tout s'achète dans le premier mois.</p></div>
+    <div class="vol-head">
+      <h2>Chaque semaine, des centaines de nouveaux clients dans votre secteur.</h2>
+      <p>Une entreprise qui ouvre choisit ses fournisseurs, son assurance et son comptable dans ses premières semaines. Voici ce que Radar a trié en une seule semaine, pour la France entière.</p>
     </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <h2>Comment ça marche</h2>
-    <ol class="steps">
-      <li><h3>Vous choisissez</h3><p>Un ou plusieurs secteurs, et les départements où vous travaillez.</p></li>
-      <li><h3>Nous trions</h3><p>Chaque nuit, les annonces officielles du BODACC sont filtrées et classées par secteur.</p></li>
-      <li><h3>Vous recevez</h3><p>Un email à 7 h, du mardi au samedi, avec uniquement les nouveautés : aucun doublon.</p></li>
+    <ol class="bars" aria-label="Créations et reprises d'entreprises par secteur, semaine du 28 septembre 2026">
+      <li style="--w:100%"><span class="who"><b>Transport et livraison</b><span>Véhicules, carburant, assurance flotte</span></span><span class="track"><span class="fill"></span></span><span class="n">1&nbsp;707</span></li>
+      <li style="--w:67.5%"><span class="who"><b>Conseil et services aux entreprises</b><span>Comptables, banques, logiciels</span></span><span class="track"><span class="fill"></span></span><span class="n">1&nbsp;153</span></li>
+      <li style="--w:53.1%"><span class="who"><b>Commerce de détail</b><span>Agencement, encaissement, assurance</span></span><span class="track"><span class="fill"></span></span><span class="n">907</span></li>
+      <li style="--w:43.4%"><span class="who"><b>Restaurants, bars et traiteurs</b><span>Boissons, café, produits frais, caisses</span></span><span class="track"><span class="fill"></span></span><span class="n">740</span></li>
+      <li style="--w:40.1%"><span class="who"><b>BTP et artisans</b><span>Négoces de matériaux, assurance décennale</span></span><span class="track"><span class="fill"></span></span><span class="n">684</span></li>
+      <li style="--w:34.7%"><span class="who"><b>Auto et moto</b><span>Pièces, équipement d'atelier</span></span><span class="track"><span class="fill"></span></span><span class="n">592</span></li>
+      <li style="--w:33%"><span class="who"><b>Immobilier</b><span>Logiciels, assurance, diagnostics</span></span><span class="track"><span class="fill"></span></span><span class="n">563</span></li>
+      <li style="--w:13.6%"><span class="who"><b>Beauté et bien-être</b><span>Cosmétiques, mobilier de salon</span></span><span class="track"><span class="fill"></span></span><span class="n">233</span></li>
+      <li style="--w:8.9%"><span class="who"><b>Commerce alimentaire</b><span>Grossistes, froid, emballages</span></span><span class="track"><span class="fill"></span></span><span class="n">152</span></li>
     </ol>
-    <div class="chips" aria-label="Secteurs disponibles">
-      <span class="chip"><b>Restauration</b> et bars</span>
-      <span class="chip"><b>Commerce alimentaire</b></span>
-      <span class="chip"><b>Beauté</b> et bien-être</span>
-      <span class="chip"><b>BTP</b> et artisans</span>
-      <span class="chip"><b>Commerce</b> de détail</span>
-      <span class="chip"><b>Auto</b> et moto</span>
-      <span class="chip"><b>Immobilier</b></span>
-      <span class="chip"><b>Transport</b> et livraison</span>
-      <span class="chip"><b>Conseil</b> et services B2B</span>
-    </div>
+    <p class="vol-note muted">Créations et reprises publiées au BODACC du 28 septembre au 3 octobre 2026, France entière. Vous ne recevez que vos secteurs et vos départements.</p>
   </div>
 </section>
 
-<section class="markets">
-  <div class="wrap mk-grid">
+<section class="how">
+  <div class="wrap">
     <div>
-      <h2>Option : les marchés publics qui viennent d'être attribués</h2>
-      <p class="muted" style="margin-top:18px">Une entreprise vient de gagner un chantier public près de chez vous ? Elle va avoir besoin de sous-traitants, de matériel, de main-d'œuvre. Nous vous envoyons chaque semaine les marchés notifiés dans votre région, avec le montant et la fiche du titulaire.</p>
-      <p class="mk-total">Travaux BTP attribués en France sur les 30 derniers jours <strong>1 353 marchés, 1,08 milliard €</strong></p>
+      <h2>Le journal officiel, trié pour votre métier.</h2>
+      <ol class="steps">
+        <li><h3>Vous choisissez vos secteurs et vos départements</h3><p>Un seul secteur sur trois départements, ou plusieurs secteurs sur toute une région.</p></li>
+        <li><h3>Nous lisons le BODACC chaque nuit</h3><p>Près de 12&nbsp;000 créations et reprises par semaine. Nous classons chacune par activité et retirons les doublons.</p></li>
+        <li><h3>Vous recevez l'essentiel à 7 h</h3><p>Du mardi au samedi, uniquement les nouveautés de votre zone, avec un fichier CSV prêt pour votre outil commercial.</p></li>
+      </ol>
+      <p class="vs"><strong>Pourquoi pas les alertes gratuites du BODACC ?</strong> Elles envoient toutes les annonces brutes, sans tri par activité. Une annonce sur seize seulement concerne la restauration.</p>
     </div>
-    <div class="mk-list" aria-label="Exemples de marchés attribués">
-      <div class="mk"><span>Restructuration d'un groupe scolaire, lot revêtements</span><span class="amt">223 263 €</span><span class="meta">Haute-Vienne, notifié le 7 septembre</span></div>
-      <div class="mk"><span>Opération de travaux, Charente-Maritime</span><span class="amt">590 448 €</span><span class="meta">Charente-Maritime, notifié le 17 septembre</span></div>
-      <div class="mk"><span>Démolition de 26 logements</span><span class="amt">119 970 €</span><span class="meta">Corrèze, notifié le 8 septembre</span></div>
-      <div class="mk"><span>Réfection de l'étanchéité d'un gymnase de lycée</span><span class="amt">20 740 €</span><span class="meta">Landes, notifié le 11 septembre</span></div>
-    </div>
+
+    <figure class="gazette" style="margin:0" aria-label="Une annonce utile au milieu des annonces du jour">
+      <span class="ghost" style="width:92%"></span><span class="ghost" style="width:78%"></span><span class="ghost" style="width:85%"></span>
+      <div class="gap"></div>
+      <span class="ghost" style="width:88%"></span><span class="ghost" style="width:64%"></span><span class="ghost" style="width:90%"></span><span class="ghost" style="width:72%"></span>
+      <div class="real">
+        <p>Immatriculation au registre du commerce</p>
+        <p>Dénomination : <span class="hl"><strong>MAMAMIEU</strong></span></p>
+        <p>Activité : <span class="hl">fabrication et préparation sur place de sushis et makis</span></p>
+        <p>Commune : <span class="hl">Créon (33)</span></p>
+      </div>
+      <span class="ghost" style="width:80%"></span><span class="ghost" style="width:94%"></span><span class="ghost" style="width:58%"></span>
+      <div class="gap"></div>
+      <span class="ghost" style="width:86%"></span><span class="ghost" style="width:70%"></span><span class="ghost" style="width:91%"></span>
+      <figcaption class="src">Une annonce utile parmi des milliers d'autres (extrait simplifié).</figcaption>
+    </figure>
   </div>
 </section>
 
-<section id="tarifs">
+<section id="tarifs" style="padding-top:24px">
   <div class="wrap">
     <h2>Tarifs</h2>
-    <p class="muted" style="margin-top:12px">Sans engagement, résiliable à tout moment. Prix hors taxes.</p>
+    <p class="muted" style="margin-top:12px">Sans engagement, résiliable en un clic. Prix hors taxes. Essai de 7 jours sans carte bancaire.</p>
     <div class="plans">
       <div class="plan">
         <h3>Essentiel</h3>
+        <p class="for">Vous couvrez quelques départements.</p>
         <p class="price">29 €<small> / mois</small></p>
-        <ul><li>1 secteur</li><li>Jusqu'à 3 départements</li><li>Email chaque matin</li><li>Export CSV</li></ul>
+        <ul><li>1 secteur</li><li>Jusqu'à 3 départements</li><li>Alerte chaque matin, du mardi au samedi</li><li>Fichier CSV joint</li></ul>
         <div class="plan-actions"><a class="btn light" href="#essai">Essayer 7 jours</a><a class="subscribe" data-plan="essentiel" href="#" hidden>S'abonner directement</a></div>
       </div>
       <div class="plan main">
         <h3>Pro</h3>
+        <p class="for">Vous couvrez toute une région, ou plusieurs métiers.</p>
         <p class="price">49 €<small> / mois</small></p>
-        <ul><li>Jusqu'à 3 secteurs</li><li>Toute une région</li><li>Email chaque matin</li><li>Export CSV</li></ul>
+        <ul><li>Jusqu'à 3 secteurs</li><li>Tous les départements d'une région</li><li>Alerte chaque matin, du mardi au samedi</li><li>Fichier CSV joint</li></ul>
         <div class="plan-actions"><a class="btn" href="#essai">Essayer 7 jours</a><a class="subscribe" data-plan="pro" href="#" hidden>S'abonner directement</a></div>
       </div>
-      <div class="plan">
-        <h3>Marchés attribués</h3>
+    </div>
+
+    <div class="addon">
+      <div>
+        <h3>Marchés publics attribués</h3>
+        <p class="muted" style="margin-top:10px">Une entreprise vient de remporter un chantier public près de chez vous : elle va chercher des sous-traitants, du matériel et de la main-d'œuvre. Chaque semaine, les marchés notifiés dans votre région, avec le montant et le titulaire.</p>
         <p class="price">39 €<small> / mois</small></p>
-        <ul><li>Marchés notifiés dans votre région</li><li>Filtrés par famille (BTP, nettoyage, espaces verts…)</li><li>Montant et fiche du titulaire</li><li>Email chaque semaine</li></ul>
+        <p class="muted" style="margin-top:6px;font-size:15px">Seul, ou en complément d'Essentiel ou Pro.</p>
         <div class="plan-actions"><a class="btn light" href="#essai">Essayer 7 jours</a><a class="subscribe" data-plan="marches" href="#" hidden>S'abonner directement</a></div>
       </div>
+      <div>
+        <div class="mk-list" aria-label="Exemples de marchés attribués en septembre 2026">
+          <div class="mk"><span>Restructuration d'un groupe scolaire, lot revêtements</span><span class="amt">223 263 €</span><span class="meta">Haute-Vienne, notifié le 7 septembre</span></div>
+          <div class="mk"><span>Démolition de 26 logements</span><span class="amt">119 970 €</span><span class="meta">Corrèze, notifié le 8 septembre</span></div>
+          <div class="mk"><span>Réfection de l'étanchéité d'un gymnase de lycée</span><span class="amt">20 740 €</span><span class="meta">Landes, notifié le 11 septembre</span></div>
+        </div>
+        <p class="mk-total">En France, sur 30 jours : <b>1&nbsp;353 marchés de travaux attribués</b>, pour 1,08 milliard d'euros.</p>
+      </div>
     </div>
-    <p class="plans-note muted">Option cumulable avec Essentiel ou Pro. Besoin de plusieurs régions ? <a href="mailto:contact@radar-entreprises.fr">Écrivez-nous</a>.</p>
+    <p class="plans-note muted">Plusieurs régions ou une équipe commerciale ? <a href="mailto:contact@radar-entreprises.fr">Écrivez-nous</a>, nous vous faisons une offre.</p>
   </div>
 </section>
 
 <section class="trial" id="essai">
   <div class="wrap">
-    <div class="narrow">
-      <h2>7 jours gratuits, sans carte bancaire</h2>
-      <p style="margin-top:18px">Indiquez votre secteur et vos départements : vous recevez la première alerte dès le lendemain matin. À la fin de l'essai, vous choisissez de continuer ou non. Rien n'est prélevé automatiquement.</p>
+    <div>
+      <h2>7 jours gratuits, sans carte bancaire.</h2>
+      <p style="margin-top:18px">Votre première alerte arrive dès le lendemain matin.</p>
+      <ul class="promise">
+        <li>Rien n'est prélevé à la fin de l'essai : vous choisissez de continuer ou non.</li>
+        <li>Vous changez de secteurs ou de départements en répondant à une alerte.</li>
+        <li>Désinscription en un clic depuis chaque email.</li>
+      </ul>
     </div>
 
     <form name="essai" method="POST" action="/merci.html" data-netlify="true" netlify-honeypot="site_web">
       <input type="hidden" name="form-name" value="essai">
-      <p class="hidden"><label>Ne pas remplir <input name="site_web"></label></p>
+      <p class="hidden"><label>Ne pas remplir <input name="site_web" tabindex="-1" autocomplete="off"></label></p>
 
       <label>Email professionnel
-        <input type="email" name="email" required autocomplete="email">
+        <input type="email" name="email" required autocomplete="email" placeholder="vous@entreprise.fr">
       </label>
-      <label>Entreprise <span>Pour adapter l'alerte à votre activité</span>
+      <label>Entreprise <span class="hint">Facultatif, pour adapter l'alerte à votre activité</span>
         <input type="text" name="entreprise" autocomplete="organization">
       </label>
       <fieldset>
         <legend>Secteurs à suivre</legend>
         <div class="checks">
-          <label><input type="checkbox" name="secteurs" value="restauration"> Restauration</label>
+          <label><input type="checkbox" name="secteurs" value="restauration"> Restauration et bars</label>
           <label><input type="checkbox" name="secteurs" value="commerce_alimentaire"> Commerce alimentaire</label>
           <label><input type="checkbox" name="secteurs" value="beaute_bien_etre"> Beauté</label>
           <label><input type="checkbox" name="secteurs" value="btp"> BTP</label>
@@ -296,15 +336,18 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
           <label><input type="checkbox" name="secteurs" value="auto_moto"> Auto et moto</label>
           <label><input type="checkbox" name="secteurs" value="immobilier"> Immobilier</label>
           <label><input type="checkbox" name="secteurs" value="transport_livraison"> Transport</label>
-          <label><input type="checkbox" name="secteurs" value="conseil_services_b2b"> Services B2B</label>
-          <label><input type="checkbox" name="secteurs" value="marches_attribues"> Marchés attribués</label>
+          <label><input type="checkbox" name="secteurs" value="conseil_services_b2b"> Services aux entreprises</label>
         </div>
       </fieldset>
-      <label>Départements <span>Numéros séparés par des virgules, par exemple 16, 17, 33</span>
-        <input type="text" name="departements" required inputmode="numeric" pattern="[0-9AB ,]+">
+      <label class="option"><input type="checkbox" name="secteurs" value="marches_attribues"><span><b>Ajouter les marchés publics attribués</b><span class="hint">Un email chaque semaine pour votre région.</span></span></label>
+      <label>Départements <span class="hint">Jusqu'à 3 pendant l'essai, par exemple 16, 17, 33</span>
+        <input type="text" name="departements" id="depts" required inputmode="text" autocomplete="off"
+          pattern="\s*(0[1-9]|[1-8][0-9]|9[0-5]|2[AaBb]|97[1-6])(\s*[,; ]\s*(0[1-9]|[1-8][0-9]|9[0-5]|2[AaBb]|97[1-6]))*\s*[,;]?\s*"
+          title="Numéros de département séparés par des virgules, par exemple 16, 17, 33">
+        <span class="depts-out" id="depts-out" aria-live="polite"></span>
       </label>
       <label class="consent"><input type="checkbox" name="consentement" required> J'accepte de recevoir les alertes Radar Entreprises par email. Je peux me désinscrire à tout moment.</label>
-      <button class="btn" type="submit">Démarrer l'essai gratuit</button>
+      <button class="btn" type="submit">Essayer 7 jours gratuitement</button>
     </form>
   </div>
 </section>
@@ -312,21 +355,29 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
 <section>
   <div class="wrap"><div class="narrow">
     <h2>Questions fréquentes</h2>
-    <div style="margin-top:24px">
-      <details><summary>D'où viennent les données ?</summary><p>Du BODACC, le bulletin officiel où sont publiées toutes les créations, ventes et cessions d'entreprises inscrites au registre du commerce, et des données essentielles de la commande publique pour les marchés attribués. Ces données sont publiques et diffusées sous Licence Ouverte.</p></details>
-      <details><summary>Quelle est la différence avec les alertes gratuites du BODACC ?</summary><p>Le BODACC publie les annonces brutes, sans classement par activité. Nous trions chaque annonce par secteur, retirons les doublons et vous envoyons uniquement ce qui correspond à votre métier et à votre zone, dans un format lisible en deux minutes.</p></details>
+    <div class="faq">
+      <details><summary>Combien d'entreprises vais-je recevoir ?</summary><p>Cela dépend de votre secteur et de votre zone. À titre d'exemple, la semaine du 28 septembre 2026, la restauration représentait 740 créations et reprises en France, dont 26 sur la Charente, la Charente-Maritime et la Gironde. Les jours sans nouveauté, nous ne vous envoyons rien.</p></details>
+      <details><summary>D'où viennent les données ?</summary><p>Du BODACC, le bulletin officiel où sont publiées les créations, ventes et cessions d'entreprises inscrites au registre du commerce, et des données essentielles de la commande publique pour les marchés attribués. Ces données sont publiques et diffusées sous Licence Ouverte.</p></details>
+      <details><summary>Quelle différence avec les alertes gratuites du BODACC ?</summary><p>Le BODACC publie les annonces brutes, sans classement par activité. Nous trions chaque annonce par secteur, retirons les doublons et vous envoyons uniquement ce qui correspond à votre métier et à votre zone, lisible en deux minutes et exportable en CSV.</p></details>
       <details><summary>Les coordonnées des dirigeants sont-elles incluses ?</summary><p>Vous recevez le nom de l'entreprise, son activité, son adresse, son numéro SIREN et le lien vers l'annonce officielle. Nous ne fournissons ni téléphone ni email personnel.</p></details>
       <details><summary>Puis-je utiliser ces informations pour prospecter ?</summary><p>Oui, dans le respect du RGPD : prospection en lien avec l'activité professionnelle de l'entreprise, et prise en compte de toute demande d'opposition. Les entrepreneurs individuels sont des personnes physiques : traitez leurs données avec la même attention.</p></details>
-      <details><summary>Comment résilier ?</summary><p>À tout moment, en un clic depuis le lien présent dans chaque email. Aucun engagement.</p></details>
+      <details><summary>Comment résilier ?</summary><p>À tout moment, en un clic depuis le lien présent dans chaque email, ou depuis l'espace « Gérer mon abonnement ». Aucun engagement.</p></details>
     </div>
   </div></div>
+</section>
+
+<section class="final" style="background:var(--fluo)">
+  <div class="wrap">
+    <h2 style="max-width:20ch">Demain à 7 h, vos premiers prospects.</h2>
+    <a class="btn" href="#essai">Essayer 7 jours gratuitement</a>
+  </div>
 </section>
 </main>
 
 <footer>
   <div class="wrap">
-    <span>Radar Entreprises. Données : BODACC et DECP, Licence Ouverte 2.0.</span>
-    <span><a href="mailto:contact@radar-entreprises.fr">contact@radar-entreprises.fr</a> · <a id="portail" href="#" hidden>Gérer mon abonnement</a> · <a href="/mentions-legales.html">Mentions légales et données personnelles</a></span>
+    <span>Radar Entreprises. Données BODACC et DECP, Licence Ouverte 2.0.</span>
+    <nav aria-label="Liens utiles"><a href="mailto:contact@radar-entreprises.fr">contact@radar-entreprises.fr</a><a id="portail" href="#" hidden>Gérer mon abonnement</a><a href="/mentions-legales.html">Mentions légales et données personnelles</a></nav>
   </div>
 </footer>
 
@@ -342,6 +393,24 @@ fetch("/stripe.json", {cache: "no-store"}).then(r => r.ok ? r.json() : null).the
   const portail = document.getElementById("portail");
   if (cfg.portail) { portail.href = cfg.portail; portail.hidden = false; }
 }).catch(() => {});
+
+/* Confirme en clair les départements saisis, pour éviter les fautes de frappe. */
+(() => {
+  const N = "01 Ain|02 Aisne|03 Allier|04 Alpes-de-Haute-Provence|05 Hautes-Alpes|06 Alpes-Maritimes|07 Ardèche|08 Ardennes|09 Ariège|10 Aube|11 Aude|12 Aveyron|13 Bouches-du-Rhône|14 Calvados|15 Cantal|16 Charente|17 Charente-Maritime|18 Cher|19 Corrèze|2A Corse-du-Sud|2B Haute-Corse|21 Côte-d'Or|22 Côtes-d'Armor|23 Creuse|24 Dordogne|25 Doubs|26 Drôme|27 Eure|28 Eure-et-Loir|29 Finistère|30 Gard|31 Haute-Garonne|32 Gers|33 Gironde|34 Hérault|35 Ille-et-Vilaine|36 Indre|37 Indre-et-Loire|38 Isère|39 Jura|40 Landes|41 Loir-et-Cher|42 Loire|43 Haute-Loire|44 Loire-Atlantique|45 Loiret|46 Lot|47 Lot-et-Garonne|48 Lozère|49 Maine-et-Loire|50 Manche|51 Marne|52 Haute-Marne|53 Mayenne|54 Meurthe-et-Moselle|55 Meuse|56 Morbihan|57 Moselle|58 Nièvre|59 Nord|60 Oise|61 Orne|62 Pas-de-Calais|63 Puy-de-Dôme|64 Pyrénées-Atlantiques|65 Hautes-Pyrénées|66 Pyrénées-Orientales|67 Bas-Rhin|68 Haut-Rhin|69 Rhône|70 Haute-Saône|71 Saône-et-Loire|72 Sarthe|73 Savoie|74 Haute-Savoie|75 Paris|76 Seine-Maritime|77 Seine-et-Marne|78 Yvelines|79 Deux-Sèvres|80 Somme|81 Tarn|82 Tarn-et-Garonne|83 Var|84 Vaucluse|85 Vendée|86 Vienne|87 Haute-Vienne|88 Vosges|89 Yonne|90 Territoire de Belfort|91 Essonne|92 Hauts-de-Seine|93 Seine-Saint-Denis|94 Val-de-Marne|95 Val-d'Oise|971 Guadeloupe|972 Martinique|973 Guyane|974 La Réunion|975 Saint-Pierre-et-Miquelon|976 Mayotte";
+  const names = Object.fromEntries(N.split("|").map(s => [s.slice(0, s.indexOf(" ")), s.slice(s.indexOf(" ") + 1)]));
+  const input = document.getElementById("depts"), out = document.getElementById("depts-out");
+  input.addEventListener("input", () => {
+    const codes = [...new Set((input.value.match(/97[1-6]|2[ab]|\d{2}/gi) || []).map(c => c.toUpperCase()))];
+    const known = codes.filter(c => names[c]), unknown = codes.filter(c => !names[c]);
+    out.className = "depts-out";
+    if (!codes.length) { out.textContent = ""; return; }
+    if (unknown.length) { out.textContent = "Département inconnu : " + unknown.join(", "); out.classList.add("warn"); return; }
+    let t = known.slice(0, 3).map(c => names[c] + " (" + c + ")").join(", ");
+    if (known.length > 3) { t += ". L'essai couvre les 3 premiers ; écrivez-nous pour plus."; out.classList.add("warn"); }
+    else out.classList.add("ok");
+    out.textContent = t;
+  });
+})();
 </script>
 </body>
 </html>
