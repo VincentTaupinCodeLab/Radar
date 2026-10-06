@@ -89,6 +89,12 @@ check(sorted(r["id"] for r in rows) == ["1", "2", "3", "4", "7"],
 check(next(r for r in rows if r["id"] == "7")["montant"] is None, "Montant à 1 € traité comme non précisé")
 sel = marches.for_subscriber(rows, {"departements": ["16", "33"], "types": ["btp"], "montant_min": 40000})
 check([r["id"] for r in sel] == ["1"], "Filtres département + type + montant minimum")
+check(marches.titre("COMMUNE DE SAINT-YRIEIX-SUR-CHARENTE") == "Commune de Saint-Yrieix-sur-Charente",
+      "Noms d'acheteurs et de villes mis en forme")
+check(marches.nom_propre("CIMALTO (CIMALTO)") == "CIMALTO", "Sigle en double retiré du nom")
+check(marches.from_record(rec(9, "45000000-7", "16", 5e4, "2026-10-05"))["acheteur_siret"] == "21160015300014"
+      and marches.from_record(dict(rec(9, "45000000-7", "16", 5e4, "2026-10-05"), acheteur_id="12345678900011"))["acheteur_siret"] == "",
+      "Acheteur ignoré quand la source recopie le SIRET du titulaire")
 check(marches.propre("INX MS010 - TRAVAUX DE RÉFECTION DE LA TOITURE") == "Travaux de réfection de la toiture",
       "Objet nettoyé (code interne, majuscules)")
 

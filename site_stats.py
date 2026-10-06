@@ -236,7 +236,7 @@ def marches_page(today: dt.date, page: str) -> tuple:
         v = r.get("titulaire_ville") or DEPT_NOMS.get(dep, dep)
         return f"{v} ({(r.get('titulaire_cp') or dep)[:2]})"
     def meta(r):
-        bits = [f"Acheteur : {e(M.propre(r['acheteur_nom'].title(), 60))}"]
+        bits = [f"Acheteur : {e(M.propre(r['acheteur_nom'], 60))}"]
         if r["duree_mois"]:
             bits.append(f"{r['duree_mois']} mois")
         if str(r["offres_recues"]).isdigit():
@@ -245,7 +245,7 @@ def marches_page(today: dt.date, page: str) -> tuple:
         return " · ".join(bits)
     h, hdep = ex[0]
     panneau = f"""<div class="panel">
-        <div class="owner"><small>Maître d'ouvrage</small><b>{e(h['acheteur_nom'].title())}</b></div>
+        <div class="owner"><small>Maître d'ouvrage</small><b>{e(h['acheteur_nom'])}</b></div>
         <div class="what">{e(M.propre(h['objet'], 110))}</div>
         <dl>
           <dt>Entreprise titulaire</dt><dd><span class="win hl">{e(h['titulaire_nom'])}</span><small>{e(h.get('titulaire_ville') or '')}{', ' + DEPT_NOMS.get(hdep, hdep) if h.get('titulaire_ville') else DEPT_NOMS.get(hdep, hdep)}</small></dd>

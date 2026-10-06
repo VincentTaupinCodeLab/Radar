@@ -117,7 +117,8 @@ def from_record(r: dict) -> dict:
         "sous_traitance": (r.get("soustraitancedeclaree") or "").lower() == "oui",
         "groupement": len(cotit) > 0,
         "titulaire_siret": siret,
-        "acheteur_siret": str(r.get("acheteur_id") or ""),
+        # Certaines sources (DGFIP) recopient le SIRET du titulaire à la place de l'acheteur.
+        "acheteur_siret": "" if str(r.get("acheteur_id") or "") == siret else str(r.get("acheteur_id") or ""),
         "departements": sorted(decp.depts_of(r)),
     }
 
@@ -154,6 +155,25 @@ def _cache(con):
     return con
 
 
+PETITS = {"de", "du", "des", "la", "le", "les", "et", "sur", "sous", "en", "aux", "au", "d", "l"}
+
+
+def titre(nom: str) -> str:
+    """COMMUNE DE GUILLOS -> Commune de Guillos ; SAINT-YRIEIX-SUR-CHARENTE -> Saint-Yrieix-sur-Charente."""
+    out = re.sub(r"[A-Za-zÀ-ÿ]+", lambda m: m.group(0).lower() if m.group(0).lower() in PETITS
+                 else m.group(0).capitalize(), nom.lower())
+    out = re.sub(r"(?<=[ '’-])(D|L)(?=['’])", lambda m: m.group(1).lower(), out)
+    return out[:1].upper() + out[1:]
+
+
+def nom_propre(nom: str) -> str:
+    """« CIMALTO (CIMALTO) » -> « CIMALTO »."""
+    m = re.fullmatch(r"(.+?)\s*\((.+)\)", nom.strip())
+    if m and m.group(1).strip().upper() == m.group(2).strip().upper():
+        return m.group(1).strip()
+    return nom.strip()
+
+
 def lookup(siret: str) -> dict | None:
     """Fiche d'un établissement via l'API Recherche d'entreprises (None si erreur réseau)."""
     url = API_ENTREPRISES + "?" + urllib.parse.urlencode({"q": siret, "per_page": 1})
@@ -177,7 +197,7 @@ def lookup(siret: str) -> dict | None:
     nom = res.get("nom_complet") or res.get("nom_raison_sociale") or ""
     if "NON-DIFFUSIBLE" in nom.upper():
         nom = ""
-    return {"trouve": 1, "nom": nom, "ville": (etab.get("libelle_commune") or "").title(),
+    return {"trouve": 1, "nom": nom_propre(nom), "ville": titre(etab.get("libelle_commune") or ""),
             "cp": etab.get("code_postal") or "",
             "naf": etab.get("activite_principale") or res.get("activite_principale") or "",
             "effectif": EFFECTIFS.get(str(res.get("tranche_effectif_salarie") or ""), "")}
@@ -210,12 +230,12 @@ def enrich(rows: list, db: Path | None = None, max_calls: int = 1500, pause: flo
     for r in rows:
         t = known.get(r["titulaire_siret"])
         a = known.get(r["acheteur_siret"])
-        r["titulaire_nom"] = (t[1] if t else "") or ""
-        r["titulaire_ville"] = (t[2] if t else "") or ""
+        r["titulaire_nom"] = nom_propre((t[1] if t else "") or "")
+        r["titulaire_ville"] = titre((t[2] if t else "") or "")
         r["titulaire_cp"] = (t[3] if t else "") or ""
         r["titulaire_naf"] = (t[4] if t else "") or ""
         r["titulaire_effectif"] = (t[5] if t else "") or ""
-        r["acheteur_nom"] = (a[1] if a else "") or ""
+        r["acheteur_nom"] = titre(nom_propre((a[1] if a else "") or ""))
     return calls
 
 
