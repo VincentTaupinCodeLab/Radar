@@ -1,0 +1,56 @@
+name: Chiffres du site
+
+on:
+  schedule:
+    # Lundi 04:47 UTC (06:47 à Paris l'été) : la semaine BODACC précédente est complète.
+    - cron: "47 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar
+  cancel-in-progress: false
+
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Chiffres réels de la semaine écoulée (BODACC + DECP)
+        run: python site_stats.py
+
+      - name: Enregistrement de la page
+        id: commit
+        run: |
+          git config user.name "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          git add site/index.html
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "site: chiffres de la semaine $(date -u +%F)"
+            git pull --rebase origin main
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Mise en ligne sur Netlify
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          NETLIFY_SITE_ID: e3b00484-2068-48ed-b60e-08fcffb9acf9
+        run: |
+          if [ -z "$NETLIFY_AUTH_TOKEN" ]; then
+            echo "::warning::Secret NETLIFY_TOKEN absent : la page est à jour sur GitHub mais pas en ligne."
+            exit 0
+          fi
+          npx -y netlify-cli@latest deploy --prod --dir site --site "$NETLIFY_SITE_ID" \
+            --message "Chiffres de la semaine $(date -u +%F)"
