@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radar Marchés attribués — qui a gagné les chantiers publics près de chez vous</title>
+<meta name="description" content="Chaque mardi, les marchés publics remportés dans vos départements : l'entreprise titulaire, l'acheteur, le montant et la durée. Pour les sous-traitants du BTP, loueurs de matériel, négoces et agences d'intérim. Essai gratuit 7 jours.">
+<meta property="og:title" content="Radar Marchés attribués">
+<meta property="og:description" content="Qui a gagné les chantiers publics de vos départements, chaque mardi. Essai gratuit 7 jours, sans carte bancaire.">
+<meta property="og:url" content="https://radar-entreprises.fr/marches/">
+<meta name="theme-color" content="#FFE34A">
+<link rel="canonical" href="https://radar-entreprises.fr/marches/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='9' width='28' height='15' rx='4' transform='rotate(-6 16 16)' fill='%23FFE34A'/%3E%3Cpath d='M9 22V10h6.2c2.6 0 4.3 1.5 4.3 3.8 0 1.8-1 3-2.7 3.5L20 22h-3.3l-2.8-4.4H12V22z M12 15.2h3c1 0 1.6-.6 1.6-1.4S16 12.4 15 12.4h-3z' fill='%231D2125'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<style>
+/* Radar Marchés attribués : le panneau de chantier, avant qu'il soit posé. */
+:root{--site:#E9E4D6;--post:#8C8676}
+.sub{font-weight:500;color:var(--muted);margin-left:2px}
+
+/* ---------- Héros ---------- */
+.hero{padding:56px 0 0}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,520px);gap:56px;align-items:end}
+.hero .text{padding-bottom:96px}
+.hero h1{text-wrap:balance;max-width:15ch}
+.hero .lead{font-size:20px;margin:24px 0 32px;max-width:40ch}
+.actions{display:flex;gap:14px 22px;flex-wrap:wrap;align-items:center}
+.fine{margin-top:18px;font-size:14px}
+
+/* Le panneau */
+.board{margin:0;position:relative;padding-bottom:72px}
+.board::before,.board::after{content:"";position:absolute;bottom:0;width:14px;height:110px;background:var(--post);
+  border-radius:2px 2px 0 0;z-index:0}
+.board::before{left:18%}.board::after{right:18%}
+.panel{position:relative;z-index:1;background:var(--paper);border:3px solid var(--ink);border-radius:4px;
+  box-shadow:0 2px 0 var(--ink),0 28px 40px -26px rgba(29,33,37,.55)}
+.panel .owner{background:var(--ink);color:#fff;padding:16px 22px 14px}
+.panel .owner small{display:block;font-size:13px;color:#C9CDD1;font-weight:500}
+.panel .owner b{display:block;font-size:19px;line-height:1.25;margin-top:2px}
+.panel .what{padding:16px 22px;font-size:17px;font-weight:700;line-height:1.35;border-bottom:2px solid var(--ink)}
+.panel dl{margin:0;padding:6px 22px 10px;display:grid;grid-template-columns:auto 1fr;gap:0}
+.panel dt,.panel dd{padding:10px 0;border-bottom:1px solid var(--rule);margin:0}
+.panel dt{font-size:14px;color:var(--muted);padding-right:20px}
+.panel dd{font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.panel dd small{display:block;font-weight:400;font-size:14px;color:var(--muted)}
+.panel dl > :nth-last-child(-n+2){border-bottom:0}
+.panel .win{font-size:20px}
+.panel .date{padding:12px 22px;background:var(--gazette);font-size:14px;color:var(--muted);border-top:1px solid var(--rule)}
+@media (prefers-reduced-motion:no-preference){
+  .panel .hl{animation:mark .6s cubic-bezier(.3,.7,.3,1) .5s both}
+  @keyframes mark{from{background-size:0% 72%}to{background-size:100% 72%}}
+}
+
+/* ---------- Bandeau chiffres ---------- */
+.week{background:var(--site);padding:40px 0 72px}
+.week p{font-size:clamp(20px,2.4vw,26px);line-height:1.4;font-weight:500;max-width:46ch}
+.week b{font-weight:800}
+.week .src{font-size:14px;font-weight:400;color:var(--muted);margin-top:14px}
+
+/* ---------- Pour qui ---------- */
+.who-head{max-width:34ch}
+.who{list-style:none;padding:0;margin:40px 0 0;border-top:2px solid var(--ink)}
+.who li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:6px 48px;padding:22px 0;border-bottom:1px solid var(--rule)}
+.who h3{font-size:20px}
+.who p{color:var(--muted);max-width:56ch}
+
+/* ---------- L'alerte ---------- */
+.alert{background:var(--gazette)}
+.alert .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:64px;align-items:start}
+.contains{list-style:none;padding:0;margin:28px 0 0}
+.contains li{padding:12px 0;border-top:1px solid var(--rule)}
+.contains b{display:block}
+.contains span{color:var(--muted);font-size:15px}
+.mail-card{background:var(--paper);border:1px solid var(--rule);border-radius:10px;overflow:hidden;
+  box-shadow:0 24px 48px -30px rgba(29,33,37,.4)}
+.mail-top{padding:16px 20px 14px;border-bottom:1px solid var(--rule)}
+.mail-top .from{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.mail-top .subject{font-weight:700;margin-top:3px;line-height:1.35}
+.dep{padding:14px 20px 6px;font-weight:800;font-size:14px;border-bottom:2px solid var(--ink);margin:0 20px;padding-left:0;padding-right:0}
+.m{padding:14px 20px;border-bottom:1px solid var(--rule)}
+.m .row{display:flex;justify-content:space-between;gap:16px;align-items:baseline}
+.m .who-won{font-weight:700;font-size:16px;line-height:1.3}
+.m .amt{font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+.m .place{font-size:13px;color:var(--muted)}
+.m .obj{font-size:14px;margin-top:6px;line-height:1.45}
+.m .meta{font-size:13px;color:var(--muted);margin-top:4px}
+.tag{display:inline-block;background:var(--fluo);font-size:12px;font-weight:700;padding:1px 8px;border-radius:3px;margin-top:6px}
+.mail-more{padding:13px 20px;font-size:14px;color:var(--muted)}
+.alert figcaption{font-size:13px;color:var(--muted);margin-top:12px}
+
+/* ---------- Tarif + essai ---------- */
+.trial .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:64px;align-items:start}
+.price{font-weight:800;font-size:56px;line-height:1;letter-spacing:-.03em;margin:28px 0 0;font-variant-numeric:tabular-nums}
+.price small{font-weight:400;font-size:17px;letter-spacing:0;color:var(--muted)}
+.includes{list-style:none;padding:0;margin:24px 0 0}
+.includes li{padding:10px 0 10px 26px;border-top:1px solid var(--rule);position:relative}
+.includes li::before{content:"";position:absolute;left:2px;top:17px;width:12px;height:7px;border:solid var(--ink);
+  border-width:0 0 2px 2px;transform:rotate(-45deg)}
+.after{margin-top:20px;font-size:15px}
+.subscribe{font-weight:600}
+form{background:var(--paper);border:2px solid var(--ink);border-radius:10px;padding:28px;display:grid;gap:22px}
+label{display:grid;gap:6px;font-weight:700;font-size:15px}
+.hint{font-weight:400;color:var(--muted);font-size:14px}
+input[type=email],input[type=text],select{font:inherit;font-size:16px;padding:13px 14px;border:1px solid #9EA4A9;
+  border-radius:var(--radius);background:#fff;color:var(--ink);width:100%}
+input::placeholder{color:#8A9096;font-weight:400}
+input:focus,select:focus{border-color:var(--ink);outline:2px solid var(--fluo);outline-offset:0}
+fieldset{border:0;padding:0;margin:0;min-width:0}
+legend{font-weight:700;font-size:15px;margin-bottom:10px;padding:0}
+.checks{display:flex;flex-wrap:wrap;gap:8px}
+.checks label{display:flex;align-items:center;gap:8px;font-weight:400;border:1px solid var(--rule);border-radius:999px;
+  padding:7px 14px 7px 11px;cursor:pointer;font-size:15px}
+.checks label:has(input:checked){background:var(--fluo);border-color:var(--fluo)}
+.checks input,.consent input{width:18px;height:18px;margin:0;accent-color:var(--ink);flex:none}
+.depts-out{font-size:14px;font-weight:400;color:var(--muted);min-height:1.4em}
+.depts-out.ok{color:var(--ink)}
+.depts-out.warn{color:#9A3412}
+.consent{font-weight:400;font-size:14px;color:var(--muted);display:flex;gap:10px;align-items:flex-start}
+.consent input{margin-top:3px}
+form .btn{width:100%;padding:18px}
+.hidden{display:none}
+
+/* ---------- FAQ ---------- */
+.faq{margin-top:28px;border-top:2px solid var(--ink)}
+details{border-bottom:1px solid var(--rule)}
+summary{cursor:pointer;list-style:none;padding:18px 40px 18px 0;font-weight:700;position:relative}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:4px;top:14px;font-size:24px;font-weight:400;transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{padding:0 0 20px;color:var(--muted);max-width:62ch}
+
+.final{background:var(--fluo)}
+.final .wrap{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.final h2{max-width:22ch}
+.btn.small{white-space:nowrap}
+.crumb{font-size:15px;font-weight:600;color:var(--muted);text-decoration:none}
+.crumb:hover{color:var(--ink)}
+
+@media (max-width:880px){
+  .hero{padding-top:32px}
+  .hero .wrap,.alert .wrap,.trial .wrap{grid-template-columns:1fr;gap:40px}
+  .hero .text{padding-bottom:0}
+  .hero .wrap{gap:48px}
+  .hero .lead{font-size:18px;margin:18px 0 24px}
+  .who li{grid-template-columns:1fr}
+  .week{padding:32px 0 56px}
+}
+@media (max-width:640px){header .crumb{display:none}}
+@media (max-width:480px){
+  .panel .owner,.panel .what,.panel dl,.panel .date{padding-left:16px;padding-right:16px}
+  .panel .what{font-size:16px}
+  .board::before{left:12%}.board::after{right:12%}
+  form{padding:20px}
+  .price{font-size:48px}
+  header .crumb{display:none}
+  .logo .sub{font-size:15px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="/marches/" aria-label="Radar Marchés attribués, accueil">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="9" width="28" height="15" rx="4" transform="rotate(-6 16 16)" fill="#FFE34A"/><path d="M9 22V10h6.2c2.6 0 4.3 1.5 4.3 3.8 0 1.8-1 3-2.7 3.5L20 22h-3.3l-2.8-4.4H12V22z M12 15.2h3c1 0 1.6-.6 1.6-1.4S16 12.4 15 12.4h-3z" fill="#1D2125"/></svg>
+      Radar <span class="sub">Marchés attribués</span>
+    </a>
+    <div style="display:flex;gap:20px;align-items:center">
+      <a class="crumb" href="/">Nouvelles entreprises</a>
+      <a class="btn light small" href="#essai">Essai gratuit</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <div class="text">
+      <h1>Qui a gagné le chantier, avant que le panneau soit posé.</h1>
+      <p class="lead">Chaque mardi, les marchés publics remportés dans vos départements : l'entreprise titulaire, l'acheteur, le montant. Pour proposer votre matériel, vos équipes ou votre sous-traitance à la bonne entreprise, au bon moment.</p>
+      <div class="actions">
+        <a class="btn" href="#essai">Essayer 7 jours gratuitement</a>
+        <a href="#alerte">Voir une alerte</a>
+      </div>
+      <p class="fine muted">Sans carte bancaire. Toute la France, métropole et outre-mer.</p>
+    </div>
+
+    <figure class="board">
+      <!-- auto:m-panneau -->
+      <div class="panel">
+        <div class="owner"><small>Maître d'ouvrage</small><b>Université Bordeaux Montaigne</b></div>
+        <div class="what">Réhabilitation du château d'eau de Pessac, de sa cuve et des salles d'aspersion</div>
+        <dl>
+          <dt>Entreprise titulaire</dt><dd><span class="win hl">ETANDEX</span><small>Beychac-et-Caillau, Gironde</small></dd>
+          <dt>Montant</dt><dd>776&nbsp;283&nbsp;€ HT</dd>
+          <dt>Durée</dt><dd>24 mois</dd>
+          <dt>Offres reçues</dt><dd>7</dd>
+        </dl>
+        <div class="date">Marché réel, notifié le 28 septembre 2026</div>
+      </div>
+      <!-- /auto:m-panneau -->
+    </figure>
+  </div>
+</section>
+
+<section class="week" aria-label="Volume de la semaine">
+  <div class="wrap">
+    <p><span data-auto="m-semaine">Entre le 29 septembre et le 5 octobre 2026</span>, <b><span data-auto="m-n">1&nbsp;354 marchés</span></b> ont été publiés en France, pour <b><span data-auto="m-somme">1 milliard d'euros</span></b>. <span data-auto="m-st">474</span> d'entre eux déclarent de la sous-traitance.</p>
+    <p class="src">Données essentielles de la commande publique, mises à jour chaque semaine.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="who-head">Un marché gagné, c'est une entreprise qui va acheter.</h2>
+    <ul class="who">
+      <li><h3>Sous-traitants du BTP</h3><p>Le titulaire d'un lot de menuiseries ou de gros œuvre cherche souvent des plaquistes, des électriciens, des poseurs. Vous l'appelez la semaine où il organise son chantier.</p></li>
+      <li><h3>Loueurs de matériel</h3><p>Nacelles, bennes, échafaudages, bases vie : chaque marché de travaux signé ouvre un besoin, avec une date de démarrage et une durée.</p></li>
+      <li><h3>Négoces et fournisseurs</h3><p>Matériaux, menuiseries, équipements techniques : vous savez qui va commander, pour quel montant de travaux et sur quelle commune.</p></li>
+      <li><h3>Intérim et recrutement</h3><p>Un marché de 24 mois remporté par une PME de 15 salariés, c'est un besoin de personnel à court terme.</p></li>
+      <li><h3>Entreprises qui répondent aux appels d'offres</h3><p>Qui gagne dans votre zone, à quel prix et face à combien de concurrents. De quoi ajuster vos prochaines offres.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="alert" id="alerte">
+  <div class="wrap">
+    <div>
+      <h2>L'alerte du mardi.</h2>
+      <p style="margin-top:18px">Un email par semaine, classé par département et par montant, avec le fichier Excel complet en pièce jointe.</p>
+      <ul class="contains">
+        <li><b>L'entreprise titulaire</b><span>Son nom, sa ville, son effectif et le lien vers sa fiche officielle (dirigeants, SIRET).</span></li>
+        <li><b>L'acheteur et l'objet du marché</b><span>Commune, hôpital, département, université… et ce qui va être construit ou livré.</span></li>
+        <li><b>Montant, durée, concurrence</b><span>Le montant HT, la durée en mois et le nombre d'offres reçues quand l'acheteur le publie.</span></li>
+        <li><b>Sous-traitance déclarée</b><span>Signalée en jaune : le titulaire a prévu de faire appel à d'autres entreprises.</span></li>
+      </ul>
+    </div>
+
+    <figure style="margin:0">
+      <!-- auto:m-exemples -->
+      <div class="mail-card">
+        <div class="mail-top">
+          <div class="from"><span>Radar Marchés attribués</span><time>mardi 7:12</time></div>
+          <div class="subject">3 marchés attribués cette semaine — Gironde, Vienne et Haute-Vienne</div>
+        </div>
+        <div class="m">
+          <div class="row"><span class="who-won">NGE ROUTES</span><span class="amt">1&nbsp;522&nbsp;421&nbsp;€</span></div>
+          <div class="place">Limoges (87)</div>
+          <div class="obj">A20 : allongement de la bretelle de Grossereix, échangeur n°&nbsp;28, commune de Limoges</div>
+          <div class="meta">16 mois · 3 offres reçues</div>
+        </div>
+        <div class="m">
+          <div class="row"><span class="who-won">ETANDEX</span><span class="amt">776&nbsp;283&nbsp;€</span></div>
+          <div class="place">Beychac-et-Caillau (33)</div>
+          <div class="obj">Réhabilitation du château d'eau de Pessac, de la cuve et des salles d'aspersion</div>
+          <div class="meta">Acheteur : Université Bordeaux Montaigne · 24 mois · 7 offres reçues</div>
+        </div>
+        <div class="m">
+          <div class="row"><span class="who-won">SCOFAB</span><span class="amt">218&nbsp;847&nbsp;€</span></div>
+          <div class="place">Poitiers (86)</div>
+          <div class="obj">Restructuration de l'aile de médecine interne H8C, lot 4 : menuiseries extérieures</div>
+          <div class="meta">Acheteur : CHU de Poitiers · 18 mois · 2 offres reçues</div>
+        </div>
+        <div class="mail-more">Et la suite dans le fichier Excel joint.</div>
+      </div>
+      <figcaption>Marchés réels notifiés fin septembre 2026, présentés comme dans l'alerte.</figcaption>
+      <!-- /auto:m-exemples -->
+    </figure>
+  </div>
+</section>
+
+<section class="trial" id="essai">
+  <div class="wrap">
+    <div id="tarif">
+      <h2>7 jours gratuits, sans carte bancaire.</h2>
+      <p class="price">39&nbsp;€ <small>par mois, sans engagement</small></p>
+      <ul class="includes">
+        <li>Jusqu'à 15 départements</li>
+        <li>Filtre par type de marché et par montant minimum</li>
+        <li>Titulaire, acheteur, montant, durée, sous-traitance</li>
+        <li>Fichier Excel complet chaque semaine</li>
+        <li>Résiliable en un clic depuis chaque alerte</li>
+      </ul>
+      <p class="after muted">Pendant l'essai, vous recevez tout de suite les marchés des 7 derniers jours, puis l'alerte du mardi. Rien n'est prélevé ensuite : vous choisissez de continuer ou non. <a class="subscribe" data-plan="marches" href="#" hidden>S'abonner directement</a></p>
+    </div>
+
+    <form name="essai-marches" method="POST" action="/marches/merci.html" data-netlify="true" netlify-honeypot="site_web">
+      <input type="hidden" name="form-name" value="essai-marches">
+      <p class="hidden"><label>Ne pas remplir <input name="site_web" tabindex="-1" autocomplete="off"></label></p>
+
+      <label>Email professionnel
+        <input type="email" name="email" required autocomplete="email" placeholder="vous@entreprise.fr">
+      </label>
+      <label>Entreprise <span class="hint">Facultatif</span>
+        <input type="text" name="entreprise" autocomplete="organization">
+      </label>
+      <label>Départements <span class="hint">Jusqu'à 15, par exemple 16, 17, 33, 86</span>
+        <input type="text" name="departements" id="depts" required inputmode="text" autocomplete="off"
+          pattern="\s*(0[1-9]|[1-8][0-9]|9[0-5]|2[AaBb]|97[1-6])(\s*[,; ]\s*(0[1-9]|[1-8][0-9]|9[0-5]|2[AaBb]|97[1-6]))*\s*[,;]?\s*"
+          title="Numéros de département séparés par des virgules, par exemple 16, 17, 33">
+        <span class="depts-out" id="depts-out" aria-live="polite"></span>
+      </label>
+      <fieldset>
+        <legend>Marchés à suivre <span class="hint">Aucune case cochée : tous les marchés</span></legend>
+        <div class="checks">
+          <label><input type="checkbox" name="types" value="btp"> Travaux et matériaux du BTP</label>
+          <label><input type="checkbox" name="types" value="ingenierie"> Ingénierie, architecture</label>
+          <label><input type="checkbox" name="types" value="entretien"> Entretien, nettoyage, espaces verts</label>
+          <label><input type="checkbox" name="types" value="fournitures"> Fournitures et équipements</label>
+          <label><input type="checkbox" name="types" value="services"> Services, informatique, formation</label>
+        </div>
+      </fieldset>
+      <label>Montant minimum
+        <select name="montant_min">
+          <option value="0">Tous les montants</option>
+          <option value="40000">40 000 € et plus</option>
+          <option value="100000">100 000 € et plus</option>
+          <option value="500000">500 000 € et plus</option>
+        </select>
+      </label>
+      <label class="consent"><input type="checkbox" name="consentement" required> J'accepte de recevoir les alertes Radar Marchés attribués par email. Je peux me désinscrire à tout moment.</label>
+      <button class="btn" type="submit">Commencer l'essai gratuit</button>
+    </form>
+  </div>
+</section>
+
+<section>
+  <div class="wrap"><div class="narrow">
+    <h2>Questions fréquentes</h2>
+    <div class="faq">
+      <details><summary>D'où viennent les données ?</summary><p>Des données essentielles de la commande publique (DECP), que les acheteurs publics publient pour leurs marchés, obligatoirement à partir de 40&nbsp;000&nbsp;€ HT. Nous les complétons avec l'Annuaire des entreprises pour le nom et la ville du titulaire et de l'acheteur. Ces données sont publiques et diffusées sous Licence Ouverte.</p></details>
+      <details><summary>Pourquoi certains marchés ont été notifiés il y a plusieurs semaines ?</summary><p>Les acheteurs publient souvent leurs données avec du retard. Nous vous envoyons chaque marché la semaine où il devient public, en indiquant sa date de notification, pour que vous ne manquiez rien.</p></details>
+      <details><summary>Quelle différence avec la veille des appels d'offres ?</summary><p>Une veille d'appels d'offres vous montre les marchés à venir, pour y répondre. Radar Marchés attribués vous montre les marchés déjà gagnés, et surtout par qui : c'est l'entreprise titulaire que vous allez contacter.</p></details>
+      <details><summary>Le titulaire est-il toujours identifié ?</summary><p>Presque toujours, par son numéro SIRET. Si l'Annuaire des entreprises ne donne pas son nom (cas rare des entreprises qui ont demandé la non-diffusion), nous affichons le SIRET et le lien vers sa fiche.</p></details>
+      <details><summary>Puis-je utiliser ces informations pour prospecter ?</summary><p>Oui, dans le respect du RGPD : prospection en lien avec l'activité professionnelle de l'entreprise, et prise en compte de toute demande d'opposition. Nous ne fournissons ni téléphone ni email personnel des dirigeants.</p></details>
+      <details><summary>Comment résilier ?</summary><p>À tout moment, en un clic depuis le lien présent dans chaque alerte. Aucun engagement.</p></details>
+    </div>
+  </div></div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2>Mardi prochain, les chantiers gagnés de votre zone.</h2>
+    <a class="btn" href="#essai">Essayer 7 jours gratuitement</a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Radar Marchés attribués, une offre Radar Entreprises. Données DECP et Annuaire des entreprises, Licence Ouverte 2.0.</span>
+    <nav aria-label="Liens utiles"><a href="mailto:contact@radar-entreprises.fr">contact@radar-entreprises.fr</a><a id="portail" href="#" hidden>Gérer mon abonnement</a><a href="/mentions-legales.html">Mentions légales et données personnelles</a></nav>
+  </div>
+</footer>
+
+<script>
+/* Lien de paiement Stripe publié dans stripe.json une fois le compte activé. */
+fetch("/stripe.json", {cache: "no-store"}).then(r => r.ok ? r.json() : null).then(cfg => {
+  if (!cfg) return;
+  document.querySelectorAll(".subscribe").forEach(a => {
+    const p = cfg.plans && cfg.plans[a.dataset.plan];
+    if (p && p.url) { a.href = p.url; a.hidden = false; }
+  });
+  const portail = document.getElementById("portail");
+  if (cfg.portail) { portail.href = cfg.portail; portail.hidden = false; }
+}).catch(() => {});
+
+/* Confirme en clair les départements saisis. */
+(() => {
+  const N = "01 Ain|02 Aisne|03 Allier|04 Alpes-de-Haute-Provence|05 Hautes-Alpes|06 Alpes-Maritimes|07 Ardèche|08 Ardennes|09 Ariège|10 Aube|11 Aude|12 Aveyron|13 Bouches-du-Rhône|14 Calvados|15 Cantal|16 Charente|17 Charente-Maritime|18 Cher|19 Corrèze|2A Corse-du-Sud|2B Haute-Corse|21 Côte-d'Or|22 Côtes-d'Armor|23 Creuse|24 Dordogne|25 Doubs|26 Drôme|27 Eure|28 Eure-et-Loir|29 Finistère|30 Gard|31 Haute-Garonne|32 Gers|33 Gironde|34 Hérault|35 Ille-et-Vilaine|36 Indre|37 Indre-et-Loire|38 Isère|39 Jura|40 Landes|41 Loir-et-Cher|42 Loire|43 Haute-Loire|44 Loire-Atlantique|45 Loiret|46 Lot|47 Lot-et-Garonne|48 Lozère|49 Maine-et-Loire|50 Manche|51 Marne|52 Haute-Marne|53 Mayenne|54 Meurthe-et-Moselle|55 Meuse|56 Morbihan|57 Moselle|58 Nièvre|59 Nord|60 Oise|61 Orne|62 Pas-de-Calais|63 Puy-de-Dôme|64 Pyrénées-Atlantiques|65 Hautes-Pyrénées|66 Pyrénées-Orientales|67 Bas-Rhin|68 Haut-Rhin|69 Rhône|70 Haute-Saône|71 Saône-et-Loire|72 Sarthe|73 Savoie|74 Haute-Savoie|75 Paris|76 Seine-Maritime|77 Seine-et-Marne|78 Yvelines|79 Deux-Sèvres|80 Somme|81 Tarn|82 Tarn-et-Garonne|83 Var|84 Vaucluse|85 Vendée|86 Vienne|87 Haute-Vienne|88 Vosges|89 Yonne|90 Territoire de Belfort|91 Essonne|92 Hauts-de-Seine|93 Seine-Saint-Denis|94 Val-de-Marne|95 Val-d'Oise|971 Guadeloupe|972 Martinique|973 Guyane|974 La Réunion|976 Mayotte";
+  const names = Object.fromEntries(N.split("|").map(s => [s.slice(0, s.indexOf(" ")), s.slice(s.indexOf(" ") + 1)]));
+  const input = document.getElementById("depts"), out = document.getElementById("depts-out");
+  input.addEventListener("input", () => {
+    const codes = [...new Set((input.value.match(/97[1-6]|2[ab]|\d{2}/gi) || []).map(c => c.toUpperCase()))];
+    const known = codes.filter(c => names[c]), unknown = codes.filter(c => !names[c]);
+    out.className = "depts-out";
+    if (!codes.length) { out.textContent = ""; return; }
+    if (unknown.length) { out.textContent = "Département inconnu : " + unknown.join(", "); out.classList.add("warn"); return; }
+    let t = known.slice(0, 15).map(c => names[c] + " (" + c + ")").join(", ");
+    if (known.length > 15) { t += ". Seuls les 15 premiers seront suivis."; out.classList.add("warn"); }
+    else out.classList.add("ok");
+    out.textContent = t;
+  });
+})();
+</script>
+</body>
+</html>

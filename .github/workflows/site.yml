@@ -29,6 +29,13 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Restauration de la base (cache des fiches entreprises)
+        uses: actions/cache/restore@v4
+        with:
+          path: radar.db
+          key: radar-db-${{ github.run_id }}
+          restore-keys: radar-db-
+
       - name: Chiffres réels de la semaine écoulée (BODACC + DECP)
         run: python site_stats.py
 
@@ -37,7 +44,7 @@ jobs:
         run: |
           git config user.name "radar-bot"
           git config user.email "radar-bot@users.noreply.github.com"
-          git add site/index.html
+          git add site/index.html site/marches/index.html
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else

@@ -18,9 +18,11 @@ import sys
 from pathlib import Path
 
 import decp
+import marches as M
 import pipeline as P
 
 PAGE = Path(__file__).parent / "site" / "index.html"
+PAGE_MARCHES = Path(__file__).parent / "site" / "marches" / "index.html"
 HERO_DEPTS = ["16", "17", "33"]
 MARCHES_DEPTS = decp.REGIONS.get("75", [])  # Nouvelle-Aquitaine
 MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août",
@@ -202,6 +204,78 @@ def marches(today: dt.date) -> tuple:
 
 
 # --- Écriture ----------------------------------------------------------------
+def marches_page(today: dt.date, page: str) -> tuple:
+    """Page /marches/ : chiffres de la semaine écoulée (publication) et exemples enrichis."""
+    lundi, _ = semaine_ecoulee(today)
+    dimanche = lundi + dt.timedelta(days=6)
+    rows = [r for r in M.collect_new((lundi - dt.timedelta(days=1)).isoformat())
+            if r["date_publication"] <= dimanche.isoformat()]
+    if len(rows) < 300:
+        return page, None
+    somme = sum(r["montant"] or 0 for r in rows)
+    page = valeur(page, "m-semaine", f"Entre le {jour(lundi, False)} et le {jour(dimanche)}")
+    page = valeur(page, "m-n", f"{nb(len(rows))} marchés")
+    page = valeur(page, "m-somme", euros(somme))
+    page = valeur(page, "m-st", nb(sum(r["sous_traitance"] for r in rows)))
+    # Exemples : travaux en Nouvelle-Aquitaine, objet lisible, trois départements différents
+    cand = [r for r in rows if r["type"] == "btp" and r["montant"] and 100000 <= r["montant"] <= 5e6
+            and set(r["departements"]) & set(MARCHES_DEPTS) and lisible(r["objet"])]
+    cand.sort(key=lambda r: -r["montant"])
+    M.enrich(cand[:40])
+    ex, deps = [], set()
+    for r in cand[:40]:
+        dep = next(d for d in r["departements"] if d in MARCHES_DEPTS)
+        if r.get("titulaire_nom") and r.get("acheteur_nom") and dep not in deps:
+            ex.append((r, dep))
+            deps.add(dep)
+    if len(ex) < 3:
+        return page, f"{len(rows)} marchés (exemples inchangés)"
+    ex = [ex[0], ex[len(ex) // 2], ex[-1]]
+    e = lambda x: html.escape(x, quote=False)
+    def ville(r, dep):
+        v = r.get("titulaire_ville") or DEPT_NOMS.get(dep, dep)
+        return f"{v} ({(r.get('titulaire_cp') or dep)[:2]})"
+    def meta(r):
+        bits = [f"Acheteur : {e(M.propre(r['acheteur_nom'].title(), 60))}"]
+        if r["duree_mois"]:
+            bits.append(f"{r['duree_mois']} mois")
+        if str(r["offres_recues"]).isdigit():
+            n = int(r["offres_recues"])
+            bits.append(f"{n} offre{'s' if n > 1 else ''} reçue{'s' if n > 1 else ''}")
+        return " · ".join(bits)
+    h, hdep = ex[0]
+    panneau = f"""<div class="panel">
+        <div class="owner"><small>Maître d'ouvrage</small><b>{e(h['acheteur_nom'].title())}</b></div>
+        <div class="what">{e(M.propre(h['objet'], 110))}</div>
+        <dl>
+          <dt>Entreprise titulaire</dt><dd><span class="win hl">{e(h['titulaire_nom'])}</span><small>{e(h.get('titulaire_ville') or '')}{', ' + DEPT_NOMS.get(hdep, hdep) if h.get('titulaire_ville') else DEPT_NOMS.get(hdep, hdep)}</small></dd>
+          <dt>Montant</dt><dd>{nb(h['montant'])}&nbsp;€ HT</dd>
+          <dt>Durée</dt><dd>{h['duree_mois'] or '–'} mois</dd>
+          <dt>Offres reçues</dt><dd>{h['offres_recues'] if str(h['offres_recues']).isdigit() else 'non publié'}</dd>
+        </dl>
+        <div class="date">Marché réel, notifié le {jour(dt.date.fromisoformat(h['date_notification']))}</div>
+      </div>"""
+    noms = sorted({DEPT_NOMS[d] for _, d in ex})
+    cartes = "".join(f"""
+        <div class="m">
+          <div class="row"><span class="who-won">{e(r['titulaire_nom'])}</span><span class="amt">{nb(r['montant'])}&nbsp;€</span></div>
+          <div class="place">{e(ville(r, d))}</div>
+          <div class="obj">{e(M.propre(r['objet'], 120))}</div>
+          <div class="meta">{meta(r)}</div>{'<span class="tag">Sous-traitance déclarée</span>' if r['sous_traitance'] else ''}
+        </div>""" for r, d in sorted(ex, key=lambda x: -x[0]["montant"]))
+    exemples = f"""<div class="mail-card">
+        <div class="mail-top">
+          <div class="from"><span>Radar Marchés attribués</span><time>mardi 7:12</time></div>
+          <div class="subject">3 marchés attribués cette semaine — {', '.join(noms[:-1])} et {noms[-1]}</div>
+        </div>{cartes}
+        <div class="mail-more">Et la suite dans le fichier Excel joint.</div>
+      </div>
+      <figcaption>Marchés réels publiés la semaine du {jour(lundi)}, présentés comme dans l'alerte.</figcaption>"""
+    page = zone(page, "m-panneau", panneau)
+    page = zone(page, "m-exemples", exemples)
+    return page, f"{len(rows)} marchés + exemples"
+
+
 def zone(page: str, nom: str, contenu: str) -> str:
     rx = re.compile(rf"(<!-- auto:{nom} -->)(.*?)(\s*<!-- /auto:{nom} -->)", re.S)
     assert rx.search(page), f"zone {nom} absente"
@@ -257,6 +331,14 @@ def main():
         print(f"DECP indisponible : {e}", file=sys.stderr)
 
     PAGE.write_text(page, encoding="utf-8")
+
+    try:
+        pm, info = marches_page(today, PAGE_MARCHES.read_text(encoding="utf-8"))
+        if info:
+            PAGE_MARCHES.write_text(pm, encoding="utf-8")
+            changes.append(f"page marchés : {info}")
+    except Exception as e:
+        print(f"Page marchés inchangée : {e}", file=sys.stderr)
     print("Mis à jour :", "; ".join(changes) or "rien")
 
 

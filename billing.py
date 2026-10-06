@@ -46,10 +46,21 @@ PLANS = {
     "pro": {"nom": "Radar Entreprises — Pro", "prix": 4900,
             "description": "Jusqu'à 3 secteurs sur toute une région, alerte chaque matin.",
             "max_secteurs": 3, "max_departements": 15},
-    "marches": {"nom": "Radar Entreprises — Marchés attribués", "prix": 3900,
-                "description": "Marchés publics attribués dans vos départements, chaque semaine.",
-                "max_secteurs": 0, "max_departements": 15},
+    "marches": {"nom": "Radar Marchés attribués", "prix": 3900,
+                "description": "Chaque semaine, les marchés publics remportés dans vos départements, "
+                               "avec l'entreprise titulaire, l'acheteur et le montant.",
+                "max_secteurs": 0, "max_departements": 15, "version": "2",
+                "bienvenue": "/marches/bienvenue.html"},
 }
+
+# Champs propres à Radar Marchés attribués (menus déroulants Stripe : valeurs alphanumériques)
+MARCHES_TYPES = [("tous", "Tous les marchés"), ("btp", "Travaux et matériaux du BTP"),
+                 ("ingenierie", "Ingénierie, architecture, études"),
+                 ("entretien", "Entretien, maintenance, nettoyage, espaces verts"),
+                 ("fournitures", "Fournitures et équipements"),
+                 ("services", "Services, informatique, formation")]
+MARCHES_MONTANTS = [("m0", "Tous les montants"), ("m40000", "40 000 € et plus"),
+                    ("m100000", "100 000 € et plus"), ("m500000", "500 000 € et plus")]
 
 DEPT_RX = re.compile(r"\b(2A|2B|97[1-6]|0[1-9]|[1-8]\d|9[0-5])\b", re.I)
 
@@ -109,6 +120,19 @@ def custom_fields(plan: str) -> list:
         "type": "text",
         "text": {"minimum_length": 2, "maximum_length": 120},
     }]
+    if plan == "marches":
+        fields.append({
+            "key": "types",
+            "label": {"type": "custom", "custom": "Marchés qui vous intéressent"},
+            "type": "dropdown",
+            "dropdown": {"options": [{"label": l, "value": v} for v, l in MARCHES_TYPES]},
+        })
+        fields.append({
+            "key": "montant",
+            "label": {"type": "custom", "custom": "Montant minimum"},
+            "type": "dropdown",
+            "dropdown": {"options": [{"label": l, "value": v} for v, l in MARCHES_MONTANTS]},
+        })
     if p["max_secteurs"]:
         fields.append({
             "key": "secteur",
@@ -131,11 +155,16 @@ def setup() -> dict:
     """Idempotent : retrouve ce qui existe (metadata radar_plan), crée le reste."""
     products = {(p.get("metadata") or {}).get("radar_plan"): p
                 for p in list_all("products", {"active": "true"})}
-    links = {(l.get("metadata") or {}).get("radar_plan"): l
-             for l in list_all("payment_links", {"active": "true"})}
+    links = {}
+    for l in list_all("payment_links", {"active": "true"}):
+        m = l.get("metadata") or {}
+        links[(m.get("radar_plan"), m.get("v", "1"))] = l
     out = {"plans": {}}
     for plan, p in PLANS.items():
+        version = p.get("version", "1")
         prod = products.get(plan)
+        if prod and (prod.get("name") != p["nom"] or prod.get("description") != p["description"]):
+            prod = api("POST", f"products/{prod['id']}", {"name": p["nom"], "description": p["description"]})
         if not prod:
             prod = api("POST", "products", {
                 "name": p["nom"], "description": p["description"],
@@ -143,18 +172,21 @@ def setup() -> dict:
                 "default_price_data": {"currency": "eur", "unit_amount": p["prix"],
                                        "recurring": {"interval": "month"}},
             })
-        link = links.get(plan)
+        for (old_plan, old_v), old in links.items():  # ancienne version du lien : désactivée
+            if old_plan == plan and old_v != version:
+                api("POST", f"payment_links/{old['id']}", {"active": False})
+        link = links.get((plan, version))
         if not link:
             link = api("POST", "payment_links", {
                 "line_items": [{"price": prod["default_price"], "quantity": 1}],
                 "custom_fields": custom_fields(plan),
-                "metadata": {"radar_plan": plan},
+                "metadata": {"radar_plan": plan, "v": version},
                 "subscription_data": {"metadata": {"radar_plan": plan}},
                 "allow_promotion_codes": True,
                 "billing_address_collection": "required",
                 "tax_id_collection": {"enabled": True},
                 "after_completion": {"type": "redirect",
-                                     "redirect": {"url": f"{SITE}/bienvenue.html"}},
+                                     "redirect": {"url": SITE + p.get("bienvenue", "/bienvenue.html")}},
             })
         out["plans"][plan] = {"url": link["url"], "prix": p["prix"] / 100}
 
@@ -219,10 +251,15 @@ def subscriber_from_session(session: dict, plan: str, status: str) -> dict | Non
     if not email or not depts:
         return None
     secteurs = parse_secteurs(fields.get("secteur"), fields.get("autres"), p["max_secteurs"])
+    sub = {"email": email, "plan": plan, "secteurs": secteurs, "departements": depts,
+           "source": "stripe", "statut_stripe": status, "actif": True}
     if plan == "marches":
-        secteurs = ["marches_attribues"]
-    return {"email": email, "plan": plan, "secteurs": secteurs, "departements": depts,
-            "source": "stripe", "statut_stripe": status, "actif": True}
+        sub["secteurs"] = ["marches_attribues"]
+        t = fields.get("types")
+        sub["types"] = [t] if t and t != "tous" and t in dict(MARCHES_TYPES) else []
+        m = fields.get("montant") or "m0"
+        sub["montant_min"] = int(m[1:]) if m[1:].isdigit() else 0
+    return sub
 
 
 def paying_subscribers() -> list:

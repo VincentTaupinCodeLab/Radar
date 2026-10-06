@@ -10,7 +10,9 @@ Qui reçoit quoi :
 
 Alertes :
 - BODACC (secteurs) : chaque matin, uniquement les nouvelles parutions.
-- Marchés attribués : une fois par semaine (le mardi), 7 derniers jours.
+- Marchés attribués (marches.py) : une fois par semaine (le mardi), tous les marchés publiés
+  depuis l'envoi précédent, filtrés et enrichis par abonné, avec le CSV joint. Un nouvel
+  essai reçoit sa première alerte immédiatement (7 derniers jours).
 
 Variables d'environnement :
     BREVO_API_KEY, SENDER_EMAIL, SENDER_NAME   envoi des emails
@@ -38,6 +40,7 @@ from pipeline import DB, OUT, email_html
 ROOT = Path(__file__).parent
 STATE = ROOT / "state" / "last_parution.txt"
 STATE_MARCHES = ROOT / "state" / "last_marches.txt"
+STATE_MARCHES_PUB = ROOT / "state" / "last_marches_pub.txt"
 STATE_FIN_ESSAI = ROOT / "state" / "fin_essai_envoyes.json"
 SUBS = ROOT / "subscribers.json"
 LINKS = ROOT / "site" / "stripe.json"
@@ -113,11 +116,18 @@ def import_trial_signups(subs: list) -> bool:
     known = {s["email"].lower() for s in subs}
     added = False
     for sub in submissions:
-        if sub.get("form_name") != "essai":
+        if sub.get("form_name") not in ("essai", "essai-marches"):
             continue
         d = sub.get("data") or {}
         email = (d.get("email") or "").strip().lower()
         if not email or email in known:
+            continue
+        if sub.get("form_name") == "essai-marches":
+            entry = marches_trial(d, email)
+            if entry:
+                subs.append(entry)
+                known.add(email)
+                added = True
             continue
         raw = d.get("secteurs") or []
         raw = raw if isinstance(raw, list) else [x.strip() for x in str(raw).split(",")]
@@ -129,9 +139,35 @@ def import_trial_signups(subs: list) -> bool:
                      "departements": depts, "source": "essai", "essai_debut": TODAY.isoformat(),
                      "essai_fin": (TODAY + dt.timedelta(days=ESSAI_JOURS - 1)).isoformat(),
                      "nouveau": True, "actif": True})
+        if "marches_attribues" in secteurs:
+            subs[-1]["premiere_marches"] = True
         known.add(email)
         added = True
     return added
+
+
+def _as_list(v) -> list:
+    if isinstance(v, list):
+        return v
+    return [x.strip() for x in str(v or "").split(",") if x.strip()]
+
+
+def marches_trial(d: dict, email: str) -> dict | None:
+    """Inscription à l'essai depuis la page Radar Marchés attribués."""
+    from billing import parse_departements, PLANS
+    import marches
+    depts = parse_departements(d.get("departements"), PLANS["marches"]["max_departements"])
+    if not depts:
+        return None
+    types = [t for t in _as_list(d.get("types")) if t in marches.TYPES]
+    mini = str(d.get("montant_min") or "0")
+    return {"email": email, "entreprise": d.get("entreprise", ""), "produit": "marches",
+            "secteurs": ["marches_attribues"], "departements": depts,
+            "types": [] if len(types) == len(marches.TYPES) else types,
+            "montant_min": int(mini) if mini.isdigit() else 0,
+            "source": "essai", "essai_debut": TODAY.isoformat(),
+            "essai_fin": (TODAY + dt.timedelta(days=ESSAI_JOURS - 1)).isoformat(),
+            "nouveau": True, "premiere_marches": True, "actif": True}
 
 
 def load_subscribers() -> tuple[list, list]:
@@ -186,8 +222,23 @@ def suggested_plan(s: dict) -> str:
     return "pro" if len(bodacc) > 1 or len(s["departements"]) > 3 else "essentiel"
 
 
+def is_marches(s: dict) -> bool:
+    return s.get("produit") == "marches" or s["secteurs"] == ["marches_attribues"]
+
+
 def welcome_email(s: dict) -> str:
     fin = dt.date.fromisoformat(s["essai_fin"])
+    if is_marches(s):
+        return _page("Votre essai Radar Marchés attribués commence", [
+            "Bonjour,",
+            f"Votre essai gratuit est activé pour les départements {', '.join(s['departements'])}. "
+            "Vous allez recevoir dans quelques minutes une première alerte avec les marchés publiés ces 7 "
+            f"derniers jours, puis l'alerte de la semaine le mardi matin, jusqu'au {fin:%d/%m}.",
+            "Chaque marché indique l'entreprise qui l'a remporté, l'acheteur et le montant. Le fichier "
+            "Excel joint reprend tout, avec le SIRET et la fiche de chaque entreprise.",
+            "Pensez à ajouter contact@radar-entreprises.fr à vos contacts. Pour changer de départements, "
+            "de type de marchés ou de montant minimum, répondez simplement à cet email.",
+        ])
     return _page("Votre essai Radar Entreprises commence", [
         "Bonjour,",
         f"Votre essai gratuit est activé pour les départements {', '.join(s['departements'])}. "
@@ -200,6 +251,19 @@ def welcome_email(s: dict) -> str:
 
 def end_of_trial_email(s: dict) -> str:
     plan = suggested_plan(s)
+    if is_marches(s):
+        l = links()["plans"].get("marches", {})
+        cta = (f"<a href='{l['url']}' style='display:inline-block;background:#14213D;color:#fff;"
+               "padding:12px 18px;border-radius:4px;text-decoration:none'>Continuer pour 39 € / mois</a>"
+               if l.get("url") else "Répondez à cet email pour continuer (39 € / mois).")
+        return _page("Votre essai Radar Marchés attribués se termine aujourd'hui", [
+            "Bonjour,",
+            "C'est le dernier jour de votre essai. Pour continuer à recevoir chaque mardi les marchés "
+            "publics remportés dans vos départements, avec le titulaire et l'acheteur :",
+            cta,
+            "Sans engagement, résiliable à tout moment depuis le lien présent dans chaque alerte.",
+            "Si vous ne souhaitez pas continuer, vous n'avez rien à faire : les envois s'arrêtent d'eux-mêmes.",
+        ])
     l = links()["plans"].get(plan, {})
     noms = {"essentiel": "Essentiel (29 € / mois)", "pro": "Pro (49 € / mois)",
             "marches": "Marchés attribués (39 € / mois)"}
@@ -224,11 +288,13 @@ def trial_lifecycle(manual: list, outbox: Outbox) -> bool:
         if s.get("source") != "essai" or not s.get("actif", True):
             continue
         if s.pop("nouveau", False):
-            outbox(s["email"], "Votre essai Radar Entreprises commence", welcome_email(s), "bienvenue")
+            nom = "Radar Marchés attribués" if is_marches(s) else "Radar Entreprises"
+            outbox(s["email"], f"Votre essai {nom} commence", welcome_email(s), "bienvenue")
             changed = True
         key = f"{s['email']}|{s['essai_fin']}"
         if TODAY.isoformat() == s["essai_fin"] and key not in done:
-            outbox(s["email"], "Votre essai Radar Entreprises se termine aujourd'hui",
+            nom = "Radar Marchés attribués" if is_marches(s) else "Radar Entreprises"
+            outbox(s["email"], f"Votre essai {nom} se termine aujourd'hui",
                    end_of_trial_email(s), "fin_essai")
             done.add(key)
     if not outbox.dry:
@@ -287,27 +353,63 @@ def bodacc_alerts(subs: list, outbox: Outbox):
         STATE.write_text(latest)
 
 
-def marches_alerts(subs: list, outbox: Outbox):
+def _send_marches(s: dict, rows: list, outbox: Outbox, tag: str):
+    import marches
+    mine = marches.for_subscriber(rows, s)
+    if not mine and not s.get("envoyer_si_vide", False):
+        return False
+    foot = footer_for(s)
+    body = marches.email_html(mine, s, f"{foot}<br>" if foot else "")
+    att = (f"marches_attribues_{TODAY.isoformat()}.csv", marches.to_csv(mine)) if mine else None
+    outbox(s["email"], marches.subject(mine, s), body, tag, att)
+    return True
+
+
+def marches_alerts(subs: list, manual: list | None = None, outbox: Outbox | None = None):
+    """Alerte hebdomadaire (mardi) + première alerte immédiate pour les nouveaux essais."""
+    if outbox is None:  # ancienne signature marches_alerts(subs, outbox)
+        manual, outbox = [], manual
+    import marches
     targets = [s for s in subs if "marches_attribues" in s["secteurs"]]
-    already = STATE_MARCHES.read_text().strip() if STATE_MARCHES.exists() else ""
-    weekly_day = TODAY.weekday() == 1 or os.environ.get("FORCE_MARCHES") == "1"
-    if not targets or not weekly_day or already == TODAY.isoformat():
+    if not targets:
         return
-    import decp
-    since = (TODAY - dt.timedelta(days=7)).isoformat()
-    rows = decp.collect(since)
-    for s in targets:
-        mine = [r for r in rows if set(r["departements"]) & set(s["departements"])]
-        if not mine:
-            continue
-        body = decp.email_marches(mine, s["departements"], since)
-        foot = footer_for(s)
-        if foot:
-            body += f"<p style='font:12px system-ui;color:#555'>{foot}</p>"
-        outbox(s["email"], f"{len(mine)} marchés publics attribués ({', '.join(s['departements'])})",
-               body, "marches")
+    already = STATE_MARCHES.read_text().strip() if STATE_MARCHES.exists() else ""
+    weekly = (TODAY.weekday() == 1 or os.environ.get("FORCE_MARCHES") == "1") and already != TODAY.isoformat()
+    first = [s for s in targets if s.get("premiere_marches")]
+    if not weekly and not first:
+        return
+
+    week_ago = (TODAY - dt.timedelta(days=8)).isoformat()
+    last_pub = STATE_MARCHES_PUB.read_text().strip() if STATE_MARCHES_PUB.exists() else week_ago
+    since = min(last_pub, week_ago) if first else last_pub
+    rows = marches.collect_new(since)
+    recents = [r for r in rows if r["date_publication"] > week_ago]
+    weekly_rows = [r for r in rows if r["date_publication"] > last_pub]
+
+    audience = (targets if weekly else []) + [s for s in first if not weekly]
+    calls = marches.enrich(marches.needed(recents if not weekly else rows, audience))
+    print(f"Marchés : {len(rows)} publiés depuis le {since}, {calls} recherches d'entreprises")
+
+    for s in first:
+        _send_marches(s, recents, outbox, "marches_premiere")
+    if weekly:
+        firsts = {id(s) for s in first}
+        for s in targets:
+            if id(s) not in firsts:
+                _send_marches(s, weekly_rows, outbox, "marches")
     if not outbox.dry:
-        STATE_MARCHES.write_text(TODAY.isoformat())
+        STATE_MARCHES.parent.mkdir(exist_ok=True)
+        if weekly:
+            STATE_MARCHES.write_text(TODAY.isoformat())
+            pubs = [r["date_publication"] for r in rows if r["date_publication"]]
+            if pubs:
+                STATE_MARCHES_PUB.write_text(max(pubs + [last_pub]))
+        if first:
+            emails = {s["email"].lower() for s in first}
+            for m in manual or []:
+                if m["email"].lower() in emails:
+                    m.pop("premiere_marches", None)
+            SUBS.write_text(json.dumps(manual, indent=2, ensure_ascii=False) + "\n")
 
 
 def test_send(to: str):
@@ -330,7 +432,7 @@ def main():
     subs, manual = load_subscribers()
     trial_lifecycle(manual, outbox)
     bodacc_alerts(subs, outbox)
-    marches_alerts(subs, outbox)
+    marches_alerts(subs, manual, outbox)
     print(f"{len(subs)} abonné(s) actif(s), {outbox.count} email(s) "
           f"{'simulé(s)' if outbox.dry else 'envoyé(s)'}")
 

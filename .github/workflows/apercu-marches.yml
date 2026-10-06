@@ -1,0 +1,43 @@
+name: Aperçu Radar Marchés
+
+# Lancement manuel : génère l'alerte marchés d'une sélection (sans rien envoyer)
+# et la met à disposition en pièce jointe du passage (HTML + CSV).
+on:
+  workflow_dispatch:
+    inputs:
+      departements:
+        description: "Départements séparés par des espaces"
+        default: "16 17 33"
+      types:
+        description: "Types (btp ingenierie entretien fournitures services), vide = tous"
+        default: "btp"
+      montant_min:
+        description: "Montant minimum en euros"
+        default: "40000"
+      jours:
+        description: "Nombre de jours de publication"
+        default: "7"
+
+jobs:
+  apercu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Restauration de la base (cache des fiches entreprises)
+        uses: actions/cache/restore@v4
+        with:
+          path: radar.db
+          key: radar-db-${{ github.run_id }}
+          restore-keys: radar-db-
+      - name: Génération de l'aperçu
+        run: |
+          python marches.py --days "${{ inputs.jours }}" --dept ${{ inputs.departements }} \
+            --types ${{ inputs.types }} --min "${{ inputs.montant_min }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: apercu-marches
+          path: out/apercu_marches.*
