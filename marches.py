@@ -123,12 +123,12 @@ def from_record(r: dict) -> dict:
     }
 
 
-def collect_new(since_pub: str, max_age_days: int = 365, records: list | None = None) -> list:
+def collect_new(since_pub: str, max_age_days: int = 180, records: list | None = None) -> list:
     """Marchés dont les données ont été publiées après `since_pub` (exclu).
 
     On travaille sur la date de publication et non de notification : les acheteurs
     publient souvent avec plusieurs semaines de retard, et ces marchés-là seraient
-    sinon perdus. Les marchés notifiés il y a plus d'un an et les avenants sont ignorés.
+    sinon perdus. Les marchés notifiés il y a plus de 6 mois et les avenants sont ignorés.
     """
     raw = records if records is not None else decp.fetch(f'datepublicationdonnees>"{since_pub}"')
     oldest = (dt.date.fromisoformat(since_pub) - dt.timedelta(days=max_age_days)).isoformat()
@@ -275,7 +275,9 @@ def euros(x: float | None) -> str:
 def propre(objet: str, n: int = 220) -> str:
     """Objet lisible : sans code interne en tête, sans majuscules continues, coupé proprement."""
     o = objet.replace("\\n", " ").replace("¿", "'")
-    o = re.sub(r"^(INX\s+)?[A-Z0-9_/.-]{4,}\s*[-–:]?\s+(?=[A-Za-zÀ-ÿ])", "", o.strip())
+    # Code interne en tête (« MS010 - », « 2026-05 », « INX ») : seulement s'il contient un chiffre
+    o = re.sub(r"^INX\s+", "", o.strip())
+    o = re.sub(r"^(?=[A-Z0-9_/.-]*\d)[A-Z0-9_/.-]{4,}\s*[-–:]?\s+(?=[A-Za-zÀ-ÿ])", "", o)
     o = re.sub(r"\s+", " ", o).strip(' ."«»')
     lettres = [c for c in o if c.isalpha()]
     if lettres and sum(c.isupper() for c in lettres) / len(lettres) > .6:
@@ -357,7 +359,7 @@ def email_html(rows: list, s: dict, footer: str = "", max_cards: int = 60) -> st
         by_dep.setdefault(d, []).append(r)
     total = sum(r["montant"] or 0 for r in rows)
     st = sum(1 for r in rows if r["sous_traitance"])
-    filtre = ", ".join(TYPES[t][0].lower() for t in sorted(types)) if types else "tous types de marchés"
+    filtre = ", ".join(TYPES[t][0][:1].lower() + TYPES[t][0][1:] for t in sorted(types)) if types else "tous types de marchés"
     if mini:
         filtre += f", à partir de {euros(mini)}"
     parts, shown = [], 0
