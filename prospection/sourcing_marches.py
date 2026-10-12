@@ -100,8 +100,11 @@ def main(maxi: int = 120):
                       "cp_osm": cp})
     print(f"{len(seeds)} établissements avec site, hors enseignes nationales")
     # Équilibre : on lit d'abord les négoces et loueurs, cibles les plus directes.
-    ordre = {"negoce": 0, "location": 1, "echafaudage": 2, "second_oeuvre": 3}
-    seeds.sort(key=lambda s: ordre[s["categorie"]])
+    # Alternance des catégories pour une liste équilibrée (négoces, loueurs, échafaudeurs…).
+    paquets = {}
+    for s in seeds:
+        paquets.setdefault(s["categorie"], []).append(s)
+    seeds = [s for grp in __import__("itertools").zip_longest(*paquets.values()) for s in grp if s]
     with cf.ThreadPoolExecutor(16) as ex:
         res = list(ex.map(scan, seeds[:maxi * 4]))
     out, vus = [], set()
@@ -109,10 +112,13 @@ def main(maxi: int = 120):
         email = r.get("email", "")
         if not email or email in vus:
             continue
+        dom_mail = email.split("@")[1]
+        if not re.search(r"\.(fr|com|eu|net|org|bzh|re|pro|biz|info|immo|paris|alsace|corsica)$", dom_mail):
+            continue  # entreprise étrangère ou adresse douteuse
         vus.add(email)
         cp = r.get("cp_osm") or r.get("code_postal") or ""
         dept = cp[:3] if cp.startswith("97") else cp[:2]
-        if not dept:
+        if not re.fullmatch(r"\d{5}", cp) or not dept:
             continue
         out.append({"categorie": r["categorie"], "nom": r["nom_osm"][:80], "site": r["site"],
                     "email": email, "code_postal": cp, "departement": dept, "siren": r.get("siren", "")})

@@ -45,8 +45,28 @@ def montant_court(x: float) -> str:
     return f"{round(x / 1000):,} k€".replace(",", " ")
 
 
+def bon_objet(o: str) -> bool:
+    """Objet compréhensible tel quel : assez long, sans référence de lot ni code interne."""
+    import re
+    o = marches.propre(o, 200)
+    return (len(o) >= 25 and not re.match(r"(?i)lot\b|lot\s*n?°?\s*\d", o)
+            and not re.search(r"\d{4}\s*/\s*\d|[A-Z]{2,}\d|\blot\s*\d+\s*[-:]", o)
+            and sum(c.isupper() for c in o) < len(o) * 0.3)
+
+
+def nom_court(n: str) -> str:
+    import re
+    n = re.sub(r"\s*\([^)]*\)", "", n).strip()
+    if n.isupper():
+        n = marches.titre(n)
+    n = n if len(n) <= 45 else n[:45].rsplit(" ", 1)[0]
+    while n.split(" ")[-1].lower() in marches.PETITS and " " in n:
+        n = n.rsplit(" ", 1)[0]
+    return n
+
+
 def objet_court(o: str) -> str:
-    o = marches.propre(o, 90)
+    o = marches.propre(o, 75)
     return o[:1].lower() + o[1:] if o[1:2].islower() else o
 
 
@@ -66,7 +86,7 @@ def main():
     for p in prospects:
         lst = sorted(par_dept.get(p["departement"], []), key=lambda r: -(r["montant"] or 0))
         mid = [r for r in lst if 50000 <= r["montant"] <= 3_000_000] or lst
-        besoin.update(id(r) for r in mid[:10])
+        besoin.update(id(r) for r in [r for r in mid if bon_objet(r["objet"])][:10])
     exemples = [r for r in rows if id(r) in besoin]
     marches.enrich(exemples)
 
@@ -78,7 +98,7 @@ def main():
             continue  # trop peu de marchés pour un message crédible
         n, total = len(lst), sum(r["montant"] or 0 for r in lst)
         ex = [r for r in sorted(lst, key=lambda r: -(r["montant"] or 0))
-              if r.get("titulaire_nom") and 50000 <= r["montant"] <= 3_000_000][:4]
+              if r.get("titulaire_nom") and 50000 <= r["montant"] <= 3_000_000 and bon_objet(r["objet"])][:4]
         if not ex:
             continue
         zone = dans(d)
@@ -87,7 +107,7 @@ def main():
         e1_subject = f"{n} marchés de travaux attribués {zone} ce mois-ci"
         e1 = f"""Bonjour,
 
-Ces 30 derniers jours, {n} marchés publics de travaux ont été attribués {zone}, pour {montant_court(total)} au total. Par exemple, {a['titulaire_nom']} vient de remporter « {objet_court(a['objet'])} » ({montant_court(a['montant'])}).
+Ces 30 derniers jours, {n} marchés publics de travaux ont été attribués {zone}, pour {montant_court(total)} au total. Par exemple, {nom_court(a['titulaire_nom'])} vient de remporter « {objet_court(a['objet'])} » ({montant_court(a['montant'])}).
 
 Chaque entreprise retenue va {BESOIN[cat]} dans les semaines qui suivent : {CIBLE[cat]}, avant vos concurrents.
 
@@ -98,7 +118,7 @@ Voulez-vous recevoir celle de cette semaine pour votre département, gratuitemen
 {SIGNATURE}
 
 {STOP}"""
-        detail = "\n".join(f"- {r['titulaire_nom']} : {objet_court(r['objet'])} ({montant_court(r['montant'])})"
+        detail = "\n".join(f"- {nom_court(r['titulaire_nom'])} : {objet_court(r['objet'])} ({montant_court(r['montant'])})"
                            for r in (ex[1:4] if len(ex) > 1 else ex))
         r1 = f"""Bonjour,
 
