@@ -41,14 +41,22 @@ def ouvres_entre(a: dt.date, b: dt.date) -> int:
 
 
 def charger():
-    prospects = list(csv.DictReader(open(ROOT / "prospects.csv", encoding="utf-8")))
-    brouillons = {}
-    for b in csv.DictReader(open(ROOT / "brouillons.csv", encoding="utf-8")):
-        brouillons[(b["email"], b["etape"])] = b
+    # Deux campagnes, une seule file d'envoi : Radar Entreprises puis Radar Marchés attribués.
+    prospects, brouillons = [], {}
+    for suffixe, produit in (("", "entreprises"), ("_marches", "marches")):
+        f = ROOT / f"prospects{suffixe}.csv"
+        if not f.exists():
+            continue
+        prospects += [dict(p, produit=produit) for p in csv.DictReader(open(f, encoding="utf-8"))]
+        b_f = ROOT / f"brouillons{suffixe}.csv"
+        if b_f.exists():
+            for b in csv.DictReader(open(b_f, encoding="utf-8")):
+                brouillons[(b["email"], b["etape"])] = b
     etat = json.loads(ETAT.read_text(encoding="utf-8")) if ETAT.exists() else {}
     for p in prospects:
         etat.setdefault(p["email"], {"statut": "a_envoyer", "etapes": {}, "thread_id": "",
                                      "objet": "", "notes": ""})
+        etat[p["email"]]["produit"] = p["produit"]
     return prospects, brouillons, etat
 
 
@@ -165,7 +173,9 @@ if __name__ == "__main__":
     elif cmd == "envoye":
         envoye(args[1], args[2], args[3] if len(args) > 3 else "", today)
     elif cmd == "essai":  # essai EMAIL "16 17" [marches]
-        essai(args[1], args[2].split(), today, marches=len(args) > 3 and args[3] == "marches")
+        _, _, et = charger()
+        est_marches = (len(args) > 3 and args[3] == "marches") or et.get(args[1], {}).get("produit") == "marches"
+        essai(args[1], args[2].split(), today, marches=est_marches)
     elif cmd == "statut":
         statut(args[1], args[2], " ".join(args[3:]))
     else:

@@ -1,0 +1,65 @@
+name: Prospection Radar Marchés
+
+# Chaque lundi : chiffres et exemples de marchés frais pour la séquence de prospection.
+# La liste de prospects n'est constituée qu'une fois (ou à la demande).
+on:
+  schedule:
+    - cron: "17 4 * * 1"
+  workflow_dispatch:
+    inputs:
+      sourcing:
+        description: "Reconstituer la liste de prospects (OpenStreetMap + sites web)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar
+  cancel-in-progress: false
+
+jobs:
+  sequence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Restauration de la base (cache des fiches entreprises)
+        uses: actions/cache/restore@v4
+        with:
+          path: radar.db
+          key: radar-db-${{ github.run_id }}
+          restore-keys: radar-db-
+
+      - name: Liste de prospects
+        if: inputs.sourcing || hashFiles('prospection/prospects_marches.csv') == ''
+        working-directory: prospection
+        run: python sourcing_marches.py --max 120
+
+      - name: Séquence (marchés attribués des 30 derniers jours)
+        working-directory: prospection
+        run: python sequence_marches.py
+
+      - name: Sauvegarde de la base (cache)
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: radar.db
+          key: radar-db-${{ github.run_id }}
+
+      - name: Enregistrement
+        run: |
+          git config user.name "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          git add prospection/prospects_marches.csv prospection/brouillons_marches.csv
+          if ! git diff --cached --quiet; then
+            git commit -m "prospection marchés : séquence du $(date -u +%F)"
+            git pull --rebase origin main
+            git push
+          fi
