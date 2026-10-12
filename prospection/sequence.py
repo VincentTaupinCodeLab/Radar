@@ -14,8 +14,8 @@ from pathlib import Path
 ROOT = Path(__file__).parent
 DB = ROOT.parent / "radar.db"
 SITE = "https://radar-entreprises.fr"
-SIGNATURE = "Vincent Taupin\nRadar Entreprises · radar-entreprises.fr"
-STOP = "Si ce sujet ne vous concerne pas, répondez simplement « stop » : je ne vous recontacterai pas."
+SIGNATURE = "Vincent Taupin\nRadar Entreprises"
+STOP = "Pas concerné ? Répondez « stop » et je ne vous écrirai plus."
 
 # Ce que l'établissement qui ouvre achète au prospect, selon sa catégorie.
 BESOIN = {
@@ -49,18 +49,49 @@ def stats(con, dept: str | None):
         where += " AND departement = ?"
         args.append(dept)
     (n,) = con.execute(f"SELECT count(*) FROM annonces WHERE {where}", args).fetchone()
+    # Personnes morales uniquement : aucun entrepreneur individuel cité nommément (RGPD).
     ex = con.execute(
-        f"SELECT coalesce(nullif(enseigne,''), denomination) nom, ville FROM annonces "
+        f"SELECT coalesce(nullif(enseigne,''), denomination) nom, ville, activite FROM annonces "
         f"WHERE {where} AND personne_physique = 0 AND coalesce(nullif(enseigne,''), denomination) != '' "
-        f"ORDER BY date_parution DESC LIMIT 3", args).fetchall()
+        f"ORDER BY date_parution DESC LIMIT 60", args).fetchall()
+    # Exemples cités : uniquement ceux dont l'activité est clairement de la restauration
+    # ou de l'alimentaire (le classement automatique a quelques erreurs).
+    ex = [e for e in ex if FOOD.search(activite_courte(e[2]))][:6]
     return n, ex
+
+
+FOOD = __import__("re").compile(
+    r"restau|\\bbar\\b|caf[ée]|boulang|p[âa]tiss|boucher|charcut|traiteur|cr[êe]p|pizz|alimentation|[ée]picerie|"
+    r"snack|brasserie|salon de th[ée]|coquillage|glac|fromag|primeur|poissonn|caviste|kebab|burger|sushi|fournil", __import__("re").I)
 
 
 def titlecase(s: str) -> str:
     return s if not s.isupper() else s.title()
 
 
+def ville_courte(v: str) -> str:
+    return (v or "").replace(" Arrondissement", "").strip()
+
+
+def activite_courte(a: str) -> str:
+    import re
+    a = (a or "").strip(" -–.;:")
+    a = re.split(r"[,;.(]| et ", a)[0].strip(" -–")
+    for _ in range(3):
+        a = re.sub(r"^(la |le |les |l'|toute |tout )?(exploitation (d'un|de tout|du) fonds de commerce (de |d')|fonds de commerce (de |d')|activit[ée]s? (de |: )?|vente en magasin (de |d')?)", "", a, flags=re.I).strip()
+    a = a[:1].lower() + a[1:]
+    a = a if len(a) <= 45 else a[:45].rsplit(" ", 1)[0]
+    a = re.sub(r"^(la |le |l')", "", a, flags=re.I)
+    while True:  # pas de phrase coupée sur une préposition
+        b = re.sub(r"\s*(\b(à|a|de|du|des|sur|ou|et|en|sous|toutes|ses|type)\b|[-/–])\s*$", "", a, flags=re.I)
+        if b == a:
+            return a
+        a = b
+
+
 def drafts(p: dict, con) -> list:
+    """Séquence courte, une seule question par message, aucun lien dans le premier
+    (meilleure délivrabilité), preuve concrète dans la relance."""
     dept = p.get("departement") or ""
     local = dept in DEPTS
     n, ex = stats(con, dept if local else None)
@@ -68,31 +99,39 @@ def drafts(p: dict, con) -> list:
         local = False
         n, ex = stats(con, None)
     zone = DEPTS[dept] if local else "en France"
-    noms = [f"{titlecase(nom)} ({ville.replace(' Arrondissement', '')})" for nom, ville in ex]
-    exemples = ", ".join(noms[:-1]) + " et " + noms[-1] if len(noms) > 1 else "".join(noms)
+    zone_liste = DEPTS[dept].split(" ", 1)[1] if local else "votre zone"
+    meme_ville = local and len({ville_courte(v) for _, v, _ in ex}) == 1
+    noms = [titlecase(nom) if meme_ville else f"{titlecase(nom)} ({ville_courte(v)})" for nom, v, _ in ex[:3]]
+    exemples = ", ".join(noms)
     besoin = BESOIN.get(p["categorie"], "choisit ses fournisseurs")
 
-    e1_subject = f"{n} restaurants et commerces de bouche créés ou repris {zone} en 7 jours"
+    e1_subject = f"{n} ouvertures de restaurants et commerces de bouche {zone}"
     e1 = f"""Bonjour,
 
-La semaine dernière, {n} restaurants, bars et commerces de bouche ont été créés ou repris {zone}{', dont ' + exemples if exemples else ''}.
+La semaine dernière, {n} restaurants, bars et commerces de bouche ont ouvert ou changé de propriétaire {zone}{' : ' + exemples + '…' if exemples else '.'}
 
-Un établissement qui ouvre {besoin} dans ses premières semaines. Radar Entreprises vous envoie chaque matin la liste de ceux de votre zone : nom, activité, adresse et numéro SIREN, à partir des publications officielles du BODACC. Vous les contactez avant vos concurrents.
+Chacun {besoin} dans ses premières semaines, souvent avant que vos concurrents ne le sachent.
 
-Je vous propose 7 jours d'essai gratuit, sans carte bancaire : répondez-moi simplement avec les départements que vous couvrez, et vous recevez la première liste demain matin.
+Je publie chaque matin la liste de ces nouveaux établissements, avec adresse et numéro SIREN, à partir du BODACC officiel.
 
-Un aperçu de l'alerte : {SITE}
+Voulez-vous que je vous envoie celle de demain pour {zone_liste}, gratuitement, pour juger sur pièce ?
 
 {SIGNATURE}
 
 {STOP}"""
 
+    detail = "\n".join(f"- {titlecase(nom)}, {activite_courte(a) or 'établissement'}, {ville_courte(v)}"
+                       for nom, v, a in ex[3:6] or ex[:3])
     r1_subject = "Re: " + e1_subject
     r1 = f"""Bonjour,
 
-Je me permets de revenir vers vous. Chaque matin, Radar Entreprises repère en moyenne {round(n / 5)} nouveaux restaurants et commerces de bouche {zone}.
+Pour que ce soit concret, voici trois établissements publiés récemment {zone} :
 
-Si vous voulez juger sur pièce, je peux vous envoyer la liste de demain, sans engagement. Il suffit de me répondre « oui ».
+{detail}
+
+Ils figurent dans l'alerte avec leur adresse, leur SIREN et le lien vers l'annonce officielle. Vous en recevriez environ {n} par semaine {zone}.
+
+Je vous envoie la liste de demain ? Un simple « oui » suffit.
 
 {SIGNATURE}
 
@@ -101,9 +140,9 @@ Si vous voulez juger sur pièce, je peux vous envoyer la liste de demain, sans e
     r2_subject = "Re: " + e1_subject
     r2 = f"""Bonjour,
 
-Dernier message de ma part sur ce sujet : si la prospection des nouveaux établissements n'est pas une priorité pour vous en ce moment, je ne vous relancerai plus.
+Je ne vais pas insister. Une dernière question : si ce n'est pas vous qui gérez la prospection des nouveaux clients, à qui puis-je m'adresser ?
 
-Si c'est le cas plus tard, l'essai de 7 jours reste ouvert sur {SITE}.
+Sinon, l'essai de 7 jours reste ouvert sur {SITE}, sans carte bancaire.
 
 Bonne continuation,
 
