@@ -1,0 +1,17 @@
+{
+  "plans": {
+    "essentiel": {
+      "url": "https://buy.stripe.com/28EbJ03Xpa6qgsKgn68so00",
+      "prix": 29.0
+    },
+    "pro": {
+      "url": "https://buy.stripe.com/eVqeVcgKbcey2BUgn68so01",
+      "prix": 49.0
+    },
+    "marches": {
+      "url": "https://buy.stripe.com/bJe3cufG7ceyb8q9YI8so02",
+      "prix": 39.0
+    }
+  },
+  "portail": "https://billing.stripe.com/p/login/28EbJ03Xpa6qgsKgn68so00"
+}
