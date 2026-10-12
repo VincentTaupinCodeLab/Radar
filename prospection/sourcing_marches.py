@@ -21,16 +21,19 @@ ROOT = Path(__file__).parent
 sys.path.insert(0, str(ROOT))
 from scrape import scan  # noqa: E402
 
-OVERPASS = "https://overpass-api.de/api/interpreter"
-QUERY = """[out:json][timeout:180];
-area["ISO3166-1"="FR"][admin_level=2]->.fr;
-(
-  nwr["shop"="trade"]["trade"~"building_supplies|timber|bricks|sanitary|plumbing|tiles|electrical"](area.fr);
-  nwr["shop"="trade"][!"trade"](area.fr);
-  nwr["shop"="tool_hire"](area.fr);
-  nwr["craft"="scaffolder"](area.fr);
-);
-out tags;"""
+OVERPASS = ["https://overpass-api.de/api/interpreter",
+            "https://overpass.kumi.systems/api/interpreter",
+            "https://maps.mail.ru/osm/tools/overpass/api/interpreter"]
+# Une requête par type (une requête unique sur toute la France dépasse le délai des serveurs).
+FILTRES = [
+    '["shop"="trade"]["trade"~"building_supplies|timber|bricks"]',
+    '["shop"="tool_hire"]',
+    '["craft"="scaffolder"]',
+    '["shop"="trade"]["trade"~"sanitary|plumbing|tiles|electrical"]',
+    '["shop"="trade"][!"trade"]',
+]
+FRANCE = "(41.3,-5.2,51.1,9.6)"  # métropole et Corse
+
 
 # Enseignes nationales ou groupes intégrés : agences sans pouvoir d'achat local.
 EXCLUS = re.compile(
@@ -53,10 +56,26 @@ def categorie(tags: dict) -> str:
 
 
 def overpass() -> list:
-    data = urllib.parse.urlencode({"data": QUERY}).encode()
-    req = urllib.request.Request(OVERPASS, data=data, headers={"User-Agent": "RadarEntreprises/1.0"})
-    with urllib.request.urlopen(req, timeout=240) as r:
-        return json.load(r)["elements"]
+    import time
+    elements = []
+    for f in FILTRES:
+        q = f"[out:json][timeout:170];nwr{f}{FRANCE};out tags;"
+        for essai in range(6):
+            url = OVERPASS[essai % len(OVERPASS)]
+            try:
+                data = urllib.parse.urlencode({"data": q}).encode()
+                req = urllib.request.Request(url, data=data, headers={"User-Agent": "RadarEntreprises/1.0"})
+                with urllib.request.urlopen(req, timeout=200) as r:
+                    got = json.load(r)["elements"]
+                print(f"{f} : {len(got)} éléments ({url.split('/')[2]})")
+                elements += got
+                break
+            except Exception as ex:
+                print(f"{f} : échec sur {url.split('/')[2]} ({ex}), nouvel essai")
+                time.sleep(10)
+    if not elements:
+        raise SystemExit("Overpass indisponible")
+    return elements
 
 
 def main(maxi: int = 120):
