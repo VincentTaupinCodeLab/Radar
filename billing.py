@@ -195,7 +195,7 @@ def setup() -> dict:
     portal = portals[0] if portals else api("POST", "billing_portal/configurations", {
         "business_profile": {"headline": "Gérer votre abonnement Radar Entreprises",
                              "privacy_policy_url": f"{SITE}/mentions-legales.html",
-                             "terms_of_service_url": f"{SITE}/mentions-legales.html"},
+                             "terms_of_service_url": f"{SITE}/cgv.html"},
         "features": {
             "subscription_cancel": {"enabled": True, "mode": "at_period_end"},
             "payment_method_update": {"enabled": True},
