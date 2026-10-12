@@ -49,7 +49,7 @@ def bon_objet(o: str) -> bool:
     """Objet compréhensible tel quel : assez long, sans référence de lot ni code interne."""
     import re
     o = marches.propre(o, 200)
-    return (len(o) >= 25 and not re.match(r"(?i)lot\b|lot\s*n?°?\s*\d", o)
+    return (len(o) >= 25 and not re.match(r"(?i)lot\b|lot\s*n?°?\s*\d|accord[- ]cadre|march[ée] (à|a) bons", o)
             and not re.search(r"\d{4}\s*/\s*\d|[A-Z]{2,}\d|\blot\s*\d+\s*[-:]", o)
             and sum(c.isupper() for c in o) < len(o) * 0.3)
 
@@ -65,7 +65,14 @@ def nom_court(n: str) -> str:
     return n
 
 
+ABREV = [(r"\btvx\b", "travaux"), (r"\btrx\b", "travaux"), (r"\baep\b", "AEP"), (r"\bst\b", "Saint"),
+         (r"\brd\b", "RD"), (r"\bmen\b", "menuiserie"), (r"\bamgt\b", "aménagement")]
+
+
 def objet_court(o: str) -> str:
+    import re
+    for a, b in ABREV:
+        o = re.sub(a, b, o, flags=re.I)
     o = marches.propre(o, 75)
     return o[:1].lower() + o[1:] if o[1:2].islower() else o
 
