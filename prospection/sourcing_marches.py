@@ -126,7 +126,7 @@ def main(maxi: int = 120, ajout: bool = False):
         paquets.setdefault(s["categorie"], []).append(s)
     seeds = [s for grp in __import__("itertools").zip_longest(*paquets.values()) for s in grp if s]
     with cf.ThreadPoolExecutor(16) as ex:
-        res = list(ex.map(scan, seeds[:maxi * 4]))
+        res = list(ex.map(scan, seeds if ajout else seeds[:maxi * 4]))
     out, vus = [], {r["email"] for r in existants}
     for r in res:
         email = r.get("email", "")
