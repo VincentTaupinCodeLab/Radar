@@ -6,7 +6,9 @@ légales) et on ne retient que l'adresse générique publiée par l'entreprise e
 (scrape.scan). Les grandes enseignes nationales sont écartées : leurs agences n'achètent pas.
 
 Sortie : prospects_marches.csv (même format que prospects.csv)
-Lancement : python sourcing_marches.py [--max 120]
+Lancement : python sourcing_marches.py [--max 120]          reconstitue la liste
+            python sourcing_marches.py --reserve 150        complète la liste existante pour
+              remonter à 150 prospects jamais contactés (rien n'est fait au-dessus de 130)
 """
 import concurrent.futures as cf
 import csv
@@ -78,8 +80,26 @@ def overpass() -> list:
     return elements
 
 
-def main(maxi: int = 120):
+def a_envoyer() -> int:
+    """Prospects (des deux campagnes) qui n'ont encore reçu aucun email."""
+    etat = json.loads((ROOT / "etat.json").read_text(encoding="utf-8")) if (ROOT / "etat.json").exists() else {}
+    n = 0
+    for nom in ("prospects.csv", "prospects_marches.csv"):
+        f = ROOT / nom
+        if f.exists():
+            n += sum(1 for r in csv.DictReader(open(f, encoding="utf-8"))
+                     if etat.get(r["email"], {}).get("statut", "a_envoyer") == "a_envoyer")
+    return n
+
+
+def main(maxi: int = 120, ajout: bool = False):
+    existants = []
+    if ajout and (ROOT / "prospects_marches.csv").exists():
+        existants = list(csv.DictReader(open(ROOT / "prospects_marches.csv", encoding="utf-8")))
     deja = {r["email"].split("@")[1] for r in csv.DictReader(open(ROOT / "prospects.csv", encoding="utf-8"))}
+    deja |= {r["email"].split("@")[1] for r in existants}
+    if (ROOT / "etat.json").exists():
+        deja |= {e.split("@")[1] for e in json.loads((ROOT / "etat.json").read_text(encoding="utf-8"))}
     seeds, domaines = [], set()
     for el in overpass():
         t = el.get("tags", {})
@@ -107,7 +127,7 @@ def main(maxi: int = 120):
     seeds = [s for grp in __import__("itertools").zip_longest(*paquets.values()) for s in grp if s]
     with cf.ThreadPoolExecutor(16) as ex:
         res = list(ex.map(scan, seeds[:maxi * 4]))
-    out, vus = [], set()
+    out, vus = [], {r["email"] for r in existants}
     for r in res:
         email = r.get("email", "")
         if not email or email in vus:
@@ -128,10 +148,17 @@ def main(maxi: int = 120):
         w = csv.DictWriter(f, fieldnames=["categorie", "nom", "site", "email", "code_postal",
                                           "departement", "siren"])
         w.writeheader()
-        w.writerows(out)
+        w.writerows(existants + out)
     from collections import Counter
     print(f"{len(out)} prospects retenus :", dict(Counter(r["categorie"] for r in out)))
 
 
 if __name__ == "__main__":
-    main(int(sys.argv[sys.argv.index("--max") + 1]) if "--max" in sys.argv else 120)
+    if "--reserve" in sys.argv:
+        cible = int(sys.argv[sys.argv.index("--reserve") + 1])
+        reste = a_envoyer()
+        print(f"{reste} prospects jamais contactés (cible {cible})")
+        if reste < cible - 20:
+            main(cible - reste, ajout=True)
+    else:
+        main(int(sys.argv[sys.argv.index("--max") + 1]) if "--max" in sys.argv else 120)

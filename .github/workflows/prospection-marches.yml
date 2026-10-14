@@ -1,7 +1,8 @@
 name: Prospection Radar Marchés
 
 # Chaque lundi : chiffres et exemples de marchés frais pour la séquence de prospection.
-# La liste de prospects n'est constituée qu'une fois (ou à la demande).
+# La liste de prospects est complétée automatiquement quand il reste moins de 130 prospects
+# jamais contactés (objectif : 150), sans toucher à ceux déjà en cours.
 on:
   schedule:
     - cron: "17 4 * * 1"
@@ -11,6 +12,10 @@ on:
         description: "Reconstituer la liste de prospects (OpenStreetMap + sites web)"
         type: boolean
         default: false
+      reserve:
+        description: "Nombre de prospects jamais contactés à viser"
+        type: number
+        default: 150
 
 permissions:
   contents: write
@@ -41,6 +46,11 @@ jobs:
         if: inputs.sourcing || hashFiles('prospection/prospects_marches.csv') == ''
         working-directory: prospection
         run: python sourcing_marches.py --max 120
+
+      - name: Réserve de prospects (complément automatique)
+        if: ${{ !inputs.sourcing && hashFiles('prospection/prospects_marches.csv') != '' }}
+        working-directory: prospection
+        run: python sourcing_marches.py --reserve ${{ inputs.reserve || 150 }} || echo "Complément impossible cette semaine, liste conservée"
 
       - name: Séquence (marchés attribués des 30 derniers jours)
         working-directory: prospection
