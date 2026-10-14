@@ -108,122 +108,152 @@
   "produit": "entreprises"
  },
  "info@owlbrothers.com": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-14"
+  },
+  "thread_id": "1a13925565b8ec8e",
+  "objet": "35 ouvertures de restaurants et commerces de bouche dans le Rhône",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@labruleriedesfilatiers.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-14"
+  },
+  "thread_id": "1a13925660745d06",
+  "objet": "19 ouvertures de restaurants et commerces de bouche en Haute-Garonne",
   "notes": "",
   "produit": "entreprises"
  },
  "adv@cafes-goneo.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-14"
+  },
+  "thread_id": "1a1392573ea0c279",
+  "objet": "35 ouvertures de restaurants et commerces de bouche dans le Rhône",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@loutsa.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-14"
+  },
+  "thread_id": "1a13925753603d62",
+  "objet": "35 ouvertures de restaurants et commerces de bouche dans le Rhône",
   "notes": "",
   "produit": "entreprises"
  },
  "contacteznous@cafes-folliet.com": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-14"
+  },
+  "thread_id": "1a139257e885ff4f",
+  "objet": "11 ouvertures de restaurants et commerces de bouche en Savoie",
   "notes": "",
   "produit": "entreprises"
  },
  "hello@hayuco.coffee": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-14"
+  },
+  "thread_id": "1a13925a63d690a0",
+  "objet": "19 ouvertures de restaurants et commerces de bouche en Haute-Garonne",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@extencia.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-14"
+  },
+  "thread_id": "1a13925b3caad0bf",
+  "objet": "23 ouvertures de restaurants et commerces de bouche en Gironde",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@atacia.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-14"
+  },
+  "thread_id": "1a13925ba4844f48",
+  "objet": "23 ouvertures de restaurants et commerces de bouche en Gironde",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@gt-expertise.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-14"
+  },
+  "thread_id": "1a13925c52bac9eb",
+  "objet": "1139 ouvertures de restaurants et commerces de bouche en France",
   "notes": "",
   "produit": "entreprises"
  },
  "lege@erecapluriel.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-14"
+  },
+  "thread_id": "1a13925cf1d710a7",
+  "objet": "23 ouvertures de restaurants et commerces de bouche en Gironde",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@ci33.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-14"
+  },
+  "thread_id": "1a13925fb4000324",
+  "objet": "23 ouvertures de restaurants et commerces de bouche en Gironde",
   "notes": "",
   "produit": "entreprises"
  },
  "info@cecca.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-14"
+  },
+  "thread_id": "1a13926047185038",
+  "objet": "61 ouvertures de restaurants et commerces de bouche à Paris",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@interexco.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-14"
+  },
+  "thread_id": "1a139260eef51230",
+  "objet": "61 ouvertures de restaurants et commerces de bouche à Paris",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@kerconseil.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-14"
+  },
+  "thread_id": "1a13926190769e6d",
+  "objet": "18 ouvertures de restaurants et commerces de bouche en Loire-Atlantique",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@comptaresto.com": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-14"
+  },
+  "thread_id": "1a1392626f295085",
+  "objet": "61 ouvertures de restaurants et commerces de bouche à Paris",
   "notes": "",
   "produit": "entreprises"
  },
