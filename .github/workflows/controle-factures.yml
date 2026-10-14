@@ -1,0 +1,53 @@
+name: Contrôle des factures Stripe
+
+# Lecture seule : vérifie que le compte Stripe produira des factures conformes pour une
+# micro-entreprise (nom, adresse, SIREN, mention « TVA non applicable, art. 293 B du CGI »).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  controle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Réglages du compte
+        env:
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+        shell: python
+        run: |
+          import base64, json, os, urllib.request
+          key = os.environ["STRIPE_SECRET_KEY"]
+          def get(path):
+              req = urllib.request.Request("https://api.stripe.com/v1/" + path,
+                                           headers={"Authorization": "Bearer " + key})
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as r:
+                      return json.load(r)
+              except Exception as e:
+                  return {"erreur": str(e)}
+          acc = get("account")
+          bp = acc.get("business_profile") or {}
+          sett = acc.get("settings") or {}
+          print("Nom affiché :", (sett.get("dashboard") or {}).get("display_name"))
+          print("Nom commercial :", bp.get("name"))
+          print("Adresse de support renseignée :", bool(bp.get("support_address")))
+          print("Email de support :", bp.get("support_email"))
+          comp = acc.get("company") or {}
+          ind = acc.get("individual") or {}
+          print("Type d'entreprise :", acc.get("business_type"))
+          print("Adresse légale renseignée :", bool((comp.get("address") or ind.get("address") or {}).get("line1")))
+          print("Réglages factures :", json.dumps(sett.get("invoices"), ensure_ascii=False))
+          tpl = get("invoice_rendering_templates?limit=10")
+          for t in tpl.get("data", []):
+              print("Modèle de facture :", t.get("nickname"), t.get("status"))
+          if "erreur" in tpl:
+              print("Modèles de facture : lecture impossible", tpl["erreur"][:120])
+          inv = get("invoices?limit=5")
+          for i in inv.get("data", []):
+              print("Facture", i.get("number"), "pied :", (i.get("footer") or "")[:160],
+                    "| mention 293 B :", "293" in (i.get("footer") or "") + (i.get("description") or ""))
+          if not inv.get("data"):
+              print("Aucune facture émise pour l'instant.")
