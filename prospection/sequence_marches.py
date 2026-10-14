@@ -8,6 +8,7 @@ Entrée : prospects_marches.csv  ·  Sortie : brouillons_marches.csv
 """
 import csv
 import datetime as dt
+import re
 import sys
 from pathlib import Path
 
@@ -45,12 +46,21 @@ def montant_court(x: float) -> str:
     return f"{round(x / 1000):,} k€".replace(",", " ")
 
 
+# Majors et grands groupes du BTP : ils achètent en centrale, mauvais exemple pour un
+# fournisseur indépendant. On ne les cite qu'à défaut d'autre exemple.
+MAJORS = re.compile(
+    r"\b(sogea|vinci|eurovia|colas|eiffage|bouygues|spie|nge|razel|demathieu|fayat|guintoli|cegelec|"
+    r"ineo|engie|equans|axione|sade|gtm|campenon|dodin|soletanche|bec construction|l[eé]on grosse|"
+    r"rabot dutilleul|legendre|gcc|ramery|screg|sacer|charier|pigeon)\b", re.I)
+
+
 def bon_objet(o: str) -> bool:
     """Objet compréhensible tel quel : assez long, sans référence de lot ni code interne."""
     import re
     o = marches.propre(o, 200)
-    return (len(o) >= 25 and not re.match(r"(?i)lot\b|lot\s*n?°?\s*\d|accord[- ]cadre|march[ée] (à|a) bons", o)
-            and not re.search(r"\d{4}\s*/\s*\d|[A-Z]{2,}\d|\blot\s*\d+\s*[-:]", o)
+    return (len(o) >= 25 and not re.match(r"(?i)lot\b|lot\s*n?[o°]?\s*\d|accord[- ]cadre|march[ée] (à|a) bons", o)
+            and not re.search(r"\d{4}\s*/\s*\d|[A-Z]{2,}\d", o)
+            and not re.search(r"\blot\s*(n[o°]\s*)?\d+", o, re.I)
             and sum(c.isupper() for c in o) < len(o) * 0.3)
 
 
@@ -105,7 +115,9 @@ def main():
             continue  # trop peu de marchés pour un message crédible
         n, total = len(lst), sum(r["montant"] or 0 for r in lst)
         ex = [r for r in sorted(lst, key=lambda r: -(r["montant"] or 0))
-              if r.get("titulaire_nom") and 50000 <= r["montant"] <= 3_000_000 and bon_objet(r["objet"])][:4]
+              if r.get("titulaire_nom") and 50000 <= r["montant"] <= 3_000_000 and bon_objet(r["objet"])]
+        pme = [r for r in ex if not MAJORS.search(r["titulaire_nom"])]
+        ex = (pme + [r for r in ex if r not in pme])[:4]
         if not ex:
             continue
         zone = dans(d)
@@ -116,7 +128,7 @@ def main():
 
 Ces 30 derniers jours, {n} marchés publics de travaux ont été attribués {zone}, pour {montant_court(total)} au total. Par exemple, {nom_court(a['titulaire_nom'])} vient de remporter « {objet_court(a['objet'])} » ({montant_court(a['montant'])}).
 
-Chaque entreprise retenue va {BESOIN[cat]} dans les semaines qui suivent : {CIBLE[cat]}, avant vos concurrents.
+Chaque entreprise retenue va devoir {BESOIN[cat]} dans les semaines qui suivent : {CIBLE[cat]}, avant vos concurrents.
 
 Je publie chaque semaine la liste de ces marchés attribués, avec l'entreprise titulaire, l'acheteur et le montant, à partir des données officielles de la commande publique.
 
