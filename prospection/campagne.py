@@ -13,6 +13,9 @@ Commandes :
     python campagne.py statut EMAIL STATUT [NOTE]     met à jour un prospect
     python campagne.py essai EMAIL "16 17" [marches]  ouvre un essai de 7 jours
     python campagne.py bilan                          compteurs
+    python campagne.py reserve                        prospects Radar Entreprises jamais contactés
+    python campagne.py ajouter CATEGORIE "NOM" SITE EMAIL CODE_POSTAL
+                                                      ajoute un prospect Radar Entreprises (vérifié)
 """
 import csv
 import datetime as dt
@@ -151,6 +154,45 @@ def essai(email: str, depts: list, jour: dt.date, entreprise: str = "", marches:
     statut(email, "essai", f"essai ouvert le {jour.isoformat()} ({', '.join(depts[:3])})")
 
 
+CATEGORIES = ("boissons", "cafe", "caisse", "cuisine_pro", "comptable", "assurance", "emballage", "web")
+GRATUITS = {"gmail.com", "orange.fr", "wanadoo.fr", "free.fr", "sfr.fr", "laposte.net", "outlook.fr",
+            "hotmail.fr", "yahoo.fr", "outlook.com", "hotmail.com", "icloud.com", "live.fr", "aol.com"}
+INTERDITS = ("dpo", "rgpd", "gdpr", "privacy", "donnees", "cnil", "abuse", "noreply", "no-reply",
+             "webmaster", "recrutement", "rh", "jobs", "candidature", "compta", "factur")
+
+
+def reserve() -> int:
+    prospects, _, etat = charger()
+    return sum(1 for p in prospects if p["produit"] == "entreprises" and etat[p["email"]]["statut"] == "a_envoyer")
+
+
+def ajouter(categorie: str, nom: str, site: str, email: str, cp: str) -> str:
+    """Ajoute un prospect à prospects.csv après contrôle. Renvoie « ok » ou le motif du refus.
+    Les brouillons sont générés ensuite par GitHub Actions (workflow Prospection Radar Entreprises)."""
+    import re
+    email = email.strip().lower()
+    if categorie not in CATEGORIES:
+        return f"catégorie inconnue (au choix : {', '.join(CATEGORIES)})"
+    if not re.fullmatch(r"[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}", email):
+        return "email invalide"
+    local, dom = email.split("@")
+    if dom in GRATUITS:
+        return "adresse de messagerie gratuite"
+    if any(m in re.split(r"[._+-]", local) or local.startswith(m) for m in INTERDITS):
+        return "adresse non commerciale (DPO, RH, compta…)"
+    if not re.fullmatch(r"\d{5}", cp.strip()):
+        return "code postal invalide"
+    prospects, _, etat = charger()
+    domaines = {e.split("@")[1] for e in etat} | {p["email"].split("@")[1] for p in prospects}
+    if email in etat or dom in domaines:
+        return "déjà dans la liste"
+    cp = cp.strip()
+    dept = cp[:3] if cp.startswith("97") else ("2A" if cp[:3] in ("200", "201") else "2B" if cp.startswith("20") else cp[:2])
+    with open(ROOT / "prospects.csv", "a", newline="", encoding="utf-8") as f:
+        csv.writer(f).writerow([categorie, nom.strip()[:80], site.strip(), email, cp, dept, ""])
+    return "ok"
+
+
 def bilan():
     _, _, etat = charger()
     c = {}
@@ -176,6 +218,10 @@ if __name__ == "__main__":
         _, _, et = charger()
         est_marches = (len(args) > 3 and args[3] == "marches") or et.get(args[1], {}).get("produit") == "marches"
         essai(args[1], args[2].split(), today, marches=est_marches)
+    elif cmd == "reserve":
+        print(reserve())
+    elif cmd == "ajouter":  # ajouter CATEGORIE "NOM" SITE EMAIL CODE_POSTAL
+        print(ajouter(*args[1:6]))
     elif cmd == "statut":
         statut(args[1], args[2], " ".join(args[3:]))
     else:
