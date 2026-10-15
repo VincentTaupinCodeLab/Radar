@@ -258,90 +258,112 @@
   "produit": "entreprises"
  },
  "contact@moov.paris": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4b4d567eb75",
+  "objet": "74 ouvertures de restaurants et commerces de bouche à Paris",
   "notes": "",
   "produit": "entreprises"
  },
  "devis@tbsys.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4b588220b81",
+  "objet": "20 ouvertures de restaurants et commerces de bouche en Gironde",
   "notes": "",
   "produit": "entreprises"
  },
  "info@useome.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4b60ea88d05",
+  "objet": "74 ouvertures de restaurants et commerces de bouche à Paris",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@tec-encaissements.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4b6a964e8fb",
+  "objet": "30 ouvertures de restaurants et commerces de bouche dans le Nord",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@dcb-technologies.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4b7692fafbc",
+  "objet": "1215 ouvertures de restaurants et commerces de bouche en France",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@artemis-solutions.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4d25fd6e4a2",
+  "objet": "13 ouvertures de restaurants et commerces de bouche dans le Puy-de-Dôme",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@sodeco-france.com": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4d2f580e76b",
+  "objet": "45 ouvertures de restaurants et commerces de bouche dans les Bouches-du-Rhône",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@dgsys.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4d40ba2095f",
+  "objet": "20 ouvertures de restaurants et commerces de bouche en Loire-Atlantique",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@idcuisinepro.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4d45fbe0a50",
+  "objet": "20 ouvertures de restaurants et commerces de bouche en Gironde",
   "notes": "",
   "produit": "entreprises"
  },
  "info@negoce-chr.com": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4d4e76b25ed",
+  "objet": "14 ouvertures de restaurants et commerces de bouche en Vendée",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@martinon.cc": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4db64bd0808",
+  "objet": "52 ouvertures de restaurants et commerces de bouche dans le Rhône",
   "notes": "",
   "produit": "entreprises"
  },
@@ -354,34 +376,42 @@
   "produit": "entreprises"
  },
  "contact@sos-chr.com": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4db9e65c8a9",
+  "objet": "19 ouvertures de restaurants et commerces de bouche en Haute-Garonne",
   "notes": "",
   "produit": "entreprises"
  },
  "commercial@gea-assurances.com": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4dc16b42a3f",
+  "objet": "1215 ouvertures de restaurants et commerces de bouche en France",
   "notes": "",
   "produit": "entreprises"
  },
  "hello@assurresto.com": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4dc2967e97b",
+  "objet": "1215 ouvertures de restaurants et commerces de bouche en France",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@papafrance.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4dc484d0552",
+  "objet": "1215 ouvertures de restaurants et commerces de bouche en France",
   "notes": "",
   "produit": "entreprises"
  },
@@ -394,42 +424,52 @@
   "produit": "entreprises"
  },
  "service.commercial@packeos.com": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4e2b86202f6",
+  "objet": "1215 ouvertures de restaurants et commerces de bouche en France",
   "notes": "",
   "produit": "entreprises"
  },
  "webcontact@pkgfood.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4e2e3d76363",
+  "objet": "1215 ouvertures de restaurants et commerces de bouche en France",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@jorideal.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4e3093ca10b",
+  "objet": "1215 ouvertures de restaurants et commerces de bouche en France",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@evico.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4e33ef3ccba",
+  "objet": "20 ouvertures de restaurants et commerces de bouche en Gironde",
   "notes": "",
   "produit": "entreprises"
  },
  "contact@publiko.fr": {
-  "statut": "a_envoyer",
-  "etapes": {},
-  "thread_id": "",
-  "objet": "",
+  "statut": "en_cours",
+  "etapes": {
+   "1": "2026-10-15"
+  },
+  "thread_id": "1a13e4e37296f1ba",
+  "objet": "23 ouvertures de restaurants et commerces de bouche dans l'Hérault",
   "notes": "",
   "produit": "entreprises"
  },
@@ -1314,6 +1354,230 @@
   "produit": "marches"
  },
  "contact@ifd-outillage.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "info@reichwein.info": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "comptoir51@c-g-e.pro": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "contact@litt.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "contact@atf-encadrement.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "jean.dupont@gmail.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "info@mager.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "compra@com-cal.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "contact@filmatec.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "kommunikation-deu@holcim.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "barrachinbois@wanadoo.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "ecommerce@rullier.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "communication@queguiner.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "cemafi@wanadoo.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "info@kalkwerke.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "contact@axedecors.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "contact@denismateriaux.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "info@zucchisrl.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "favalegnami@gmail.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "contact@alfabois.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "contact@actiplia.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "lopd@esteba.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "construction@favre-felix.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "contact@balitrand.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "elemee@cdenegoce.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "info@marbreslacellera.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "contact@envain-materiaux.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "contact@gabriel-sa.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "marches"
+ },
+ "stones@steinwelten.com": {
   "statut": "a_envoyer",
   "etapes": {},
   "thread_id": "",
