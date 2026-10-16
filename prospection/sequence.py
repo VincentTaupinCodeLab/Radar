@@ -120,16 +120,18 @@ Voulez-vous que je vous envoie celle de demain pour {zone_liste}, gratuitement, 
 
 {STOP}"""
 
+    choix = ex[3:6] if len(ex) >= 6 else ex[:3]
     detail = "\n".join(f"- {titlecase(nom)}, {activite_courte(a) or 'établissement'}, {ville_courte(v)}"
-                       for nom, v, a in ex[3:6] or ex[:3])
+                       for nom, v, a in choix)
+    combien = {1: "un établissement publié", 2: "deux établissements publiés"}.get(len(choix), "trois établissements publiés")
     r1_subject = "Re: " + e1_subject
     r1 = f"""Bonjour,
 
-Pour que ce soit concret, voici trois établissements publiés récemment {zone} :
+Pour que ce soit concret, voici {combien} récemment {zone} :
 
 {detail}
 
-Ils figurent dans l'alerte avec leur adresse, leur SIREN et le lien vers l'annonce officielle. Vous en recevriez environ {n} par semaine {zone}.
+{'Il figure' if len(choix) == 1 else 'Ils figurent'} dans l'alerte avec leur adresse, leur SIREN et le lien vers l'annonce officielle. Vous en recevriez environ {n} par semaine {zone}.
 
 Je vous envoie la liste de demain ? Un simple « oui » suffit.
 
