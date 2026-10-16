@@ -2,7 +2,8 @@
  "contact@sorhobis.fr": {
   "statut": "en_cours",
   "etapes": {
-   "1": "2026-10-13"
+   "1": "2026-10-13",
+   "2": "2026-10-16"
   },
   "thread_id": "1a133fe92e6e4aed",
   "objet": "40 ouvertures de restaurants et commerces de bouche dans les Bouches-du-Rhône",
@@ -12,7 +13,8 @@
  "contact@distriboissons.com": {
   "statut": "en_cours",
   "etapes": {
-   "1": "2026-10-13"
+   "1": "2026-10-13",
+   "2": "2026-10-16"
   },
   "thread_id": "1a133feaeaf84e52",
   "objet": "61 ouvertures de restaurants et commerces de bouche à Paris",
@@ -22,7 +24,8 @@
  "contact@obiervin.fr": {
   "statut": "en_cours",
   "etapes": {
-   "1": "2026-10-13"
+   "1": "2026-10-13",
+   "2": "2026-10-16"
   },
   "thread_id": "1a133feb90c31d68",
   "objet": "18 ouvertures de restaurants et commerces de bouche en Loire-Atlantique",
@@ -32,7 +35,8 @@
  "alaryboissons@gmail.com": {
   "statut": "en_cours",
   "etapes": {
-   "1": "2026-10-13"
+   "1": "2026-10-13",
+   "2": "2026-10-16"
   },
   "thread_id": "1a133fec8ce4965f",
   "objet": "24 ouvertures de restaurants et commerces de bouche dans l'Hérault",
@@ -42,7 +46,8 @@
  "contact@occitanieboissons.com": {
   "statut": "en_cours",
   "etapes": {
-   "1": "2026-10-13"
+   "1": "2026-10-13",
+   "2": "2026-10-16"
   },
   "thread_id": "1a133feceafbc7d4",
   "objet": "19 ouvertures de restaurants et commerces de bouche en Haute-Garonne",
@@ -62,7 +67,8 @@
  "contact@comptoirdelabiere.net": {
   "statut": "en_cours",
   "etapes": {
-   "1": "2026-10-13"
+   "1": "2026-10-13",
+   "2": "2026-10-16"
   },
   "thread_id": "1a133ff7ba02ac4c",
   "objet": "12 ouvertures de restaurants et commerces de bouche en Vendée",
@@ -1584,5 +1590,205 @@
   "objet": "",
   "notes": "",
   "produit": "marches"
+ },
+ "contact@vinsettradition.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@ls-selection.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "mail2@cafes-albert.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@cafes-breizhiliens.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@afd-courtage.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@groupazur.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@lineconsulting.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@breizhcaisse.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@robben.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@acr85.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@abl40.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@sarlmsmb.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "lefroidpyreneen@lfp64.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@embalservice.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@emballages-services.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@desire-emballages.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@sarepta-expertise.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "accueil@solygec.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@coach-expertise.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "accueil@igcafrance.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@cabinetagefec.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@eskale.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@atelierdotcom.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "info@digital64.fr": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
+ },
+ "contact@agencewebcom.com": {
+  "statut": "a_envoyer",
+  "etapes": {},
+  "thread_id": "",
+  "objet": "",
+  "notes": "",
+  "produit": "entreprises"
  }
 }
