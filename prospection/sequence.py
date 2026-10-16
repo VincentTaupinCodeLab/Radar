@@ -56,7 +56,13 @@ def stats(con, dept: str | None):
         f"ORDER BY date_parution DESC LIMIT 60", args).fetchall()
     # Exemples cités : uniquement ceux dont l'activité est clairement de la restauration
     # ou de l'alimentaire (le classement automatique a quelques erreurs).
-    ex = [e for e in ex if FOOD.search(activite_courte(e[2]))][:6]
+    vus, uniques = set(), []
+    for e in ex:  # un même établissement peut paraître deux fois (création + immatriculation)
+        cle = (e[0].strip().lower(), (e[1] or "").strip().lower())
+        if cle not in vus and FOOD.search(activite_courte(e[2])):
+            vus.add(cle)
+            uniques.append(e)
+    ex = uniques[:6]
     return n, ex
 
 
@@ -99,7 +105,7 @@ def drafts(p: dict, con) -> list:
         local = False
         n, ex = stats(con, None)
     zone = DEPTS[dept] if local else "en France"
-    zone_liste = DEPTS[dept].split(" ", 1)[1] if local else "votre zone"
+    zone_liste = DEPTS[dept] if local else "pour votre zone"
     meme_ville = local and len({ville_courte(v) for _, v, _ in ex}) == 1
     noms = [titlecase(nom) if meme_ville else f"{titlecase(nom)} ({ville_courte(v)})" for nom, v, _ in ex[:3]]
     exemples = ", ".join(noms)
@@ -114,7 +120,7 @@ Chacun {besoin} dans ses premières semaines, souvent avant que vos concurrents 
 
 Je publie chaque matin la liste de ces nouveaux établissements, avec adresse et numéro SIREN, à partir du BODACC officiel.
 
-Voulez-vous que je vous envoie celle de demain pour {zone_liste}, gratuitement, pour juger sur pièce ?
+Voulez-vous que je vous envoie celle de demain {zone_liste}, gratuitement, pour juger sur pièce ?
 
 {SIGNATURE}
 
