@@ -95,7 +95,11 @@ def plan(jour: dt.date) -> list:
     deja = sum(1 for e in etat.values() if e["etapes"].get("1") == jour.isoformat())
     domaines_pris = {email.split("@")[1] for email, e in etat.items() if e["statut"] != "a_envoyer"}
     place = max(0, min(quota - deja, MAX_ENVOIS_JOUR - len(actions)))
-    for p in prospects:
+    # Alterne les deux produits (une entreprise, un marché…) pour qu'aucun ne bloque l'autre.
+    files = [[p for p in prospects if p["produit"] == prod and etat[p["email"]]["statut"] == "a_envoyer"]
+             for prod in ("entreprises", "marches")]
+    ordre = [p for paire in __import__("itertools").zip_longest(*files) for p in paire if p]
+    for p in ordre:
         if place <= 0:
             break
         e = etat[p["email"]]
@@ -154,7 +158,8 @@ def essai(email: str, depts: list, jour: dt.date, entreprise: str = "", marches:
     statut(email, "essai", f"essai ouvert le {jour.isoformat()} ({', '.join(depts[:3])})")
 
 
-CATEGORIES = ("boissons", "cafe", "caisse", "cuisine_pro", "comptable", "assurance", "emballage", "web")
+CATEGORIES = ("boissons", "cafe", "caisse", "cuisine_pro", "comptable", "assurance", "emballage", "web",
+              "banque", "hygiene", "linge", "enseigne")
 GRATUITS = {"gmail.com", "orange.fr", "wanadoo.fr", "free.fr", "sfr.fr", "laposte.net", "outlook.fr",
             "hotmail.fr", "yahoo.fr", "outlook.com", "hotmail.com", "icloud.com", "live.fr", "aol.com"}
 INTERDITS = ("dpo", "rgpd", "gdpr", "privacy", "donnees", "cnil", "abuse", "noreply", "no-reply",

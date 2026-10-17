@@ -27,6 +27,10 @@ BESOIN = {
     "assurance": "doit souscrire sa multirisque professionnelle",
     "emballage": "commande ses emballages de vente à emporter",
     "web": "a besoin d'un site et d'une présence en ligne",
+    "banque": "ouvre son compte professionnel et finance son matériel",
+    "hygiene": "doit mettre en place son plan d'hygiène et ses contrôles",
+    "linge": "choisit son fournisseur de linge et de tenues",
+    "enseigne": "fait réaliser son enseigne et sa signalétique",
 }
 
 DEPTS = {  # libellés pour l'objet du mail
