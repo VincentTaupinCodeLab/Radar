@@ -1,0 +1,3 @@
+# Droit d'opposition : un SIREN (ou SIRET) par ligne. Ces entreprises ne sont jamais affichées
+# sur les pages publiques (pages.py) ni dans la liste gratuite (liste.py).
+# Exemple : 123456789  # demande du 01/01/2026
