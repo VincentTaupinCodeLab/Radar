@@ -2,12 +2,14 @@
  "abonnes": {
   "ec94dbbf16938448": {
    "confirmation_envoyee": "2026-10-17",
+   "confirme_le": "2026-10-17",
    "departement": "16",
-   "envois": 0,
+   "derniere_semaine": "2026-W42",
+   "envois": 1,
    "inscrit_le": "2026-10-17",
    "produit": "entreprises",
    "source": "gratuit",
-   "statut": "en_attente"
+   "statut": "confirme"
   }
  }
 }
