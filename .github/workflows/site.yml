@@ -21,7 +21,7 @@ concurrency:
 jobs:
   stats:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
 
@@ -54,8 +54,11 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
+      # Les pages départements ne sont pas versionnées : on les régénère avant chaque mise en ligne.
+      - name: Pages de référencement (départements, secteurs, marchés, sitemap)
+        run: python pages.py --budget-enrichissement 300
+
       - name: Mise en ligne sur Netlify
-        if: steps.commit.outputs.changed == 'true' || inputs.forcer
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
           NETLIFY_SITE_ID: e3b00484-2068-48ed-b60e-08fcffb9acf9
@@ -66,3 +69,10 @@ jobs:
           fi
           npx -y netlify-cli@latest deploy --prod --dir site --site "$NETLIFY_SITE_ID" \
             --message "Chiffres de la semaine $(date -u +%F)"
+
+      - name: Sauvegarde de la base (cache)
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: radar.db
+          key: radar-db-${{ github.run_id }}

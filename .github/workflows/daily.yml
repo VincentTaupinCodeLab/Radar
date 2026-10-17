@@ -11,6 +11,10 @@ on:
         description: "Envoyer seulement un email de test à cette adresse (laisser vide pour un passage normal)"
         required: false
         default: ""
+      jours_bodacc:
+        description: "Jours de BODACC à relire (3 par défaut ; 31 pour reconstituer la base des pages départements)"
+        required: false
+        default: "3"
 
 permissions:
   contents: write
@@ -22,7 +26,7 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
@@ -38,12 +42,14 @@ jobs:
           restore-keys: radar-db-
 
       - name: BODACC (créations + cessions, toute la France)
-        run: python pipeline.py --days 3
+        run: python pipeline.py --days ${{ inputs.jours_bodacc || 3 }}
 
       - name: Tests du parcours abonné
         run: |
           python tests/test_parcours.py
           python tests/test_essai.py || echo "::warning::tests du parcours de fin d'essai en échec"
+          python tests/test_pages.py || echo "::warning::tests des pages départements en échec"
+          python tests/test_liste.py || echo "::warning::tests de la liste gratuite en échec"
 
       - name: DECP (marchés attribués, 30 derniers jours, toute la France)
         if: ${{ !inputs.test_to }}
@@ -60,17 +66,36 @@ jobs:
           NETLIFY_SITE_ID: e3b00484-2068-48ed-b60e-08fcffb9acf9
         run: python sender.py
 
-      - name: Sauvegarde de la base (cache)
-        if: always()
-        uses: actions/cache/save@v4
-        with:
-          path: radar.db
-          key: radar-db-${{ github.run_id }}
-
       - name: Sauvegarde de l'état d'envoi et des essais
         run: |
           git config user.name "radar-bot"
           git config user.email "radar-bot@users.noreply.github.com"
           git add state/ subscribers.json || true
           git diff --cached --quiet || git commit -m "data: run $(date -u +%F)"
+          git pull --rebase origin main
           git push
+
+      # Pages /departements/ et /marches/departements/ (non versionnées), puis mise en ligne.
+      - name: Pages de référencement (départements, secteurs, marchés, sitemap)
+        if: ${{ !inputs.test_to }}
+        run: python pages.py --budget-enrichissement 600
+
+      - name: Mise en ligne du site
+        if: ${{ !inputs.test_to }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          NETLIFY_SITE_ID: e3b00484-2068-48ed-b60e-08fcffb9acf9
+        run: |
+          if [ -z "$NETLIFY_AUTH_TOKEN" ]; then
+            echo "::error::Secret NETLIFY_TOKEN absent : pages générées mais pas mises en ligne."
+            exit 1
+          fi
+          npx -y netlify-cli@latest deploy --prod --dir site --site "$NETLIFY_SITE_ID" \
+            --message "Pages départements $(date -u +%F)"
+
+      - name: Sauvegarde de la base (cache)
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: radar.db
+          key: radar-db-${{ github.run_id }}

@@ -58,3 +58,25 @@ Les annonces BODACC sont dédoublonnées dans `radar.db` (SQLite).
 
 Secrets GitHub : `BREVO_API_KEY`, `SENDER_EMAIL`, `STRIPE_SECRET_KEY` (à ajouter au lancement),
 `NETLIFY_TOKEN` (facultatif, pour l'import automatique des essais).
+
+## Pages de référencement et liste gratuite
+
+- `pages.py` (fin de `daily.yml` et `site.yml`, juste avant la mise en ligne) écrit dans `site/`
+  les pages `/departements/` (créations et reprises BODACC des 7 derniers jours par grand secteur,
+  pages département × secteur sur 30 jours dès 3 entrées), `/marches/departements/` (10 marchés
+  récents par département) et `/marches/acheteurs/` (acheteurs ayant au moins 3 marchés en 12 mois),
+  ainsi que `sitemap.xml`. Ces fichiers ne sont pas versionnés (`.gitignore`) : tout workflow qui
+  déploie `site/` doit lancer `python pages.py` avant (`stripe-setup.yml` ne le fait pas).
+- Seules les personnes morales sont affichées (annonces « pp » écartées ; titulaires de marchés
+  confirmés comme personnes morales par l'Annuaire des entreprises). Droit d'opposition :
+  ajouter le SIREN dans `state/opposition.txt`.
+- La base garde 35 jours de BODACC et 13 mois de DECP (table `decp_marches`). Pour reconstituer
+  30 jours de BODACC : lancer « Radar quotidien » à la main avec `jours_bodacc = 31`.
+- `liste.py` (workflow `liste-gratuite.yml`, toutes les 3 h) gère le formulaire Netlify
+  `liste-gratuite` : email de confirmation (double opt-in, formulaire `liste-confirmation`),
+  désinscription en un clic (`liste-desinscription`), envoi du lundi (10 entrées) par Brevo, offre
+  d'essai à partir du 4e envoi. Les adresses restent dans Netlify ; `state/liste_gratuite.json`
+  (source « gratuit ») n'en contient aucune, le dépôt étant public. Secret facultatif `LISTE_SECRET`
+  pour signer les liens de confirmation (à défaut, `NETLIFY_TOKEN`).
+- Tests : `tests/test_pages.py` et `tests/test_liste.py` (base de test, sans réseau), lancés par
+  `tests.yml` à chaque pull request.
