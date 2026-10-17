@@ -152,7 +152,18 @@ def _cache(con):
     con.execute("""CREATE TABLE IF NOT EXISTS entreprises(
         siret TEXT PRIMARY KEY, nom TEXT, ville TEXT, cp TEXT, naf TEXT, effectif TEXT,
         trouve INTEGER, maj TEXT)""")
+    # Catégorie juridique (ajoutée pour les pages publiques : seules les personnes morales y
+    # figurent). Vide = inconnue (fiche mise en cache avant l'ajout de la colonne).
+    cols = {r[1] for r in con.execute("PRAGMA table_info(entreprises)")}
+    if "nature" not in cols:
+        con.execute("ALTER TABLE entreprises ADD COLUMN nature TEXT DEFAULT ''")
     return con
+
+
+def personne_morale(nature: str | None) -> bool:
+    """Catégories juridiques INSEE : 1xxx = personne physique (entrepreneur individuel)."""
+    n = str(nature or "").strip()
+    return n.isdigit() and not n.startswith("1")
 
 
 PETITS = {"de", "du", "des", "la", "le", "les", "et", "sur", "sous", "en", "aux", "au", "d", "l"}
@@ -197,7 +208,11 @@ def lookup(siret: str) -> dict | None:
     nom = res.get("nom_complet") or res.get("nom_raison_sociale") or ""
     if "NON-DIFFUSIBLE" in nom.upper():
         nom = ""
+    nature = str(res.get("nature_juridique") or "")
+    if (res.get("complements") or {}).get("est_entrepreneur_individuel"):
+        nature = nature if nature.startswith("1") else "1000"
     return {"trouve": 1, "nom": nom_propre(nom), "ville": titre(etab.get("libelle_commune") or ""),
+            "nature": nature,
             "cp": etab.get("code_postal") or "",
             "naf": etab.get("activite_principale") or res.get("activite_principale") or "",
             "effectif": EFFECTIFS.get(str(res.get("tranche_effectif_salarie") or ""), "")}
@@ -221,8 +236,9 @@ def enrich(rows: list, db: Path | None = None, max_calls: int = 1500, pause: flo
         if f is None:
             continue  # erreur réseau : on retentera la semaine prochaine
         rec = (s, f.get("nom", ""), f.get("ville", ""), f.get("cp", ""), f.get("naf", ""),
-               f.get("effectif", ""), f["trouve"], dt.date.today().isoformat())
-        con.execute("INSERT OR REPLACE INTO entreprises VALUES (?,?,?,?,?,?,?,?)", rec)
+               f.get("effectif", ""), f["trouve"], dt.date.today().isoformat(), f.get("nature", ""))
+        con.execute("INSERT OR REPLACE INTO entreprises (siret,nom,ville,cp,naf,effectif,trouve,maj,nature) "
+                    "VALUES (?,?,?,?,?,?,?,?,?)", rec)
         known[s] = rec
         time.sleep(pause)
     con.commit()
