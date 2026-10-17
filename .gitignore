@@ -3,3 +3,8 @@ __pycache__/
 *.zip
 .netlify/
 radar.db
+# Pages générées par pages.py à chaque passage (non versionnées)
+site/departements/
+site/marches/departements/
+site/marches/acheteurs/
+site/sitemap.xml

@@ -1,0 +1,60 @@
+name: Liste gratuite
+
+on:
+  schedule:
+    # Toutes les 3 heures : emails de confirmation (double opt-in) et désinscriptions.
+    # Le lundi, à partir de 06:23 UTC, envoi de la liste hebdomadaire aux inscrits confirmés.
+    - cron: "23 */3 * * *"
+  workflow_dispatch:
+    inputs:
+      forcer:
+        description: "Envoyer la liste de la semaine même hors lundi (aux confirmés ne l'ayant pas reçue)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar-liste
+  cancel-in-progress: false
+
+jobs:
+  liste:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Restauration de la base (cache, lecture seule)
+        uses: actions/cache/restore@v4
+        with:
+          path: radar.db
+          key: radar-db-${{ github.run_id }}
+          restore-keys: radar-db-
+
+      - name: Inscriptions, confirmations, désinscriptions et envoi du lundi
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          SENDER_NAME: Radar Entreprises
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          NETLIFY_SITE_ID: e3b00484-2068-48ed-b60e-08fcffb9acf9
+          LISTE_SECRET: ${{ secrets.LISTE_SECRET }}
+          FORCE_LISTE: ${{ inputs.forcer && '1' || '' }}
+        run: python liste.py
+
+      - name: Sauvegarde de l'état de la liste (sans adresse email)
+        run: |
+          git config user.name "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          git add state/liste_gratuite.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "liste gratuite : état du $(date -u +%F)"
+            git pull --rebase origin main
+            git push
+          fi

@@ -51,7 +51,7 @@ TODAY = dt.date.fromisoformat(os.environ.get("TODAY", dt.date.today().isoformat(
 
 
 # --- Envoi ------------------------------------------------------------------
-def send(to: str, subject: str, body: str, attachment: tuple | None = None):
+def send(to: str, subject: str, body: str, attachment: tuple | None = None, headers: dict | None = None):
     payload = {
         "sender": {"email": os.environ["SENDER_EMAIL"],
                    "name": os.environ.get("SENDER_NAME", "Radar Entreprises")},
@@ -60,6 +60,8 @@ def send(to: str, subject: str, body: str, attachment: tuple | None = None):
         "subject": subject,
         "htmlContent": body,
     }
+    if headers:
+        payload["headers"] = headers
     if attachment:
         name, content = attachment
         payload["attachment"] = [{"name": name, "content": base64.b64encode(content).decode()}]

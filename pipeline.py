@@ -27,6 +27,7 @@ BODACC = ("https://bodacc-datadila.opendatasoft.com/api/explore/v2.1/"
 ROOT = Path(__file__).parent
 DB = ROOT / "radar.db"
 OUT = ROOT / "out"
+RETENTION_JOURS = 35
 
 # --- Classification sectorielle par mots-clés (sur le libellé d'activité) ---
 # Ordre important : le premier secteur qui matche gagne. Les catégories
@@ -203,9 +204,9 @@ def store(rows: list) -> int:
         f"VALUES ({','.join('?' * len(cols))})",
         [tuple(r[c] for c in cols) for r in rows])
     new = con.total_changes - before
-    # Base mise en cache entre deux passages : 10 jours suffisent
-    # (chaque passage ne relit que les 3 derniers jours).
-    con.execute("DELETE FROM annonces WHERE date_parution < date('now', '-10 days')")
+    # Base mise en cache entre deux passages. Les pages départementales du site
+    # (pages.py) comptent les entrées sur 30 jours : on garde 35 jours.
+    con.execute(f"DELETE FROM annonces WHERE date_parution < date('now', '-{RETENTION_JOURS} days')")
     con.commit()
     con.execute("VACUUM")
     con.close()
@@ -287,11 +288,18 @@ def main():
     a = ap.parse_args()
     since = a.since or (dt.date.today() - dt.timedelta(days=a.days)).isoformat()
 
-    where = build_where(since, a.region, a.dept)
-    print("BODACC where:", where)
-    raw = fetch(where)
-    rows = [normalize(r) for r in raw]
-    new = store(rows)
+    # Par tranches de 3 jours : une longue période (rattrapage de la base) ne tient pas
+    # en une seule réponse de l'API.
+    rows, new = [], 0
+    start = dt.date.fromisoformat(since)
+    while start <= dt.date.today():
+        end = start + dt.timedelta(days=2)
+        where = build_where(start.isoformat(), a.region, a.dept) + f' and dateparution<="{end}"'
+        print("BODACC where:", where)
+        chunk = [normalize(r) for r in fetch(where)]
+        new += store(chunk) if chunk else 0
+        rows += chunk
+        start = end + dt.timedelta(days=1)
     label = f"{since}_{a.region or '-'.join(a.dept or ['FR'])}"
     by_sector = export(rows, label)
 

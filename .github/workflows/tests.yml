@@ -1,0 +1,35 @@
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths: ["**.py", "site/**", ".github/workflows/**"]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Base de données (cache du passage quotidien)
+        uses: actions/cache/restore@v4
+        with:
+          path: radar.db
+          key: radar-db-tests-${{ github.run_id }}
+          restore-keys: radar-db-
+
+      - name: Base minimale si le cache est absent
+        run: test -f radar.db || python pipeline.py --days 3
+
+      - name: Suite de tests
+        run: |
+          python tests/test_parcours.py
+          python tests/test_essai.py
+          python tests/test_pages.py
+          python tests/test_liste.py

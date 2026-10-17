@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /liste/
+Disallow: /merci.html
+Disallow: /bienvenue.html
+Disallow: /marches/merci.html
+Disallow: /marches/bienvenue.html
+
+Sitemap: https://radar-entreprises.fr/sitemap.xml
